@@ -200,6 +200,16 @@
           "exec": "cdk diff"
         }
       ]
+    },
+    "dev": {
+      "name": "dev",
+      "category": "00.build",
+      "description": "run the dev server",
+      "steps": [
+        {
+          "exec": "nodemon -w src --exec ts-node src/main-dev.ts"
+        }
+      ]
     }
   },
   "env": {

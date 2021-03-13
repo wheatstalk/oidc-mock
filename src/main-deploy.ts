@@ -8,6 +8,14 @@ const env = {
 
 const app = new cdk.App();
 
-new OidcMockStack(app, 'OidcMock-Dev', { env });
+new OidcMockStack(app, 'OidcMock-Test', {
+  env,
+  domainNameConfigSsmPath: '/OidcMock-Test/DomainNameConfig',
+});
+
+new OidcMockStack(app, 'OidcMock-Production', {
+  env,
+  domainNameConfigSsmPath: '/OidcMock-Production/DomainNameConfig',
+});
 
 app.synth();
