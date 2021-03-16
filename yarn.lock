@@ -5927,9 +5927,9 @@ object.values@^1.1.1:
     has "^1.0.3"
 
 oidc-provider@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/oidc-provider/-/oidc-provider-7.1.1.tgz#cd9cbfe45624060ee385a0604ff45e8b767392f7"
-  integrity sha512-xmIy5px7BxPonrLVSerj+IXhLf07w1Oi2LOuGm2ZbImwSV/4nPNiSaHA8rkTakBSKUn2UPTyZJ5nBqyTQ/Xd7w==
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/oidc-provider/-/oidc-provider-7.1.2.tgz#489395d8fe5b6094efd5c537cf9f84ce4992e841"
+  integrity sha512-F0I4TtmJ1loAvbWJZSIBWG1BtDTOZPJUhIkM6ECqKN/XubH6t8lUmW9L2BrAW9bdiMZ8m2oRbnudR9WJskKTPg==
   dependencies:
     "@koa/cors" "^3.1.0"
     cacheable-lookup "^6.0.0"
