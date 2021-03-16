@@ -5011,9 +5011,9 @@ jmespath@0.15.0:
   integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
 jose@^3.6.2, jose@^3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-3.7.1.tgz#962607174114c86f2689a2dbedf2c80c90505d38"
-  integrity sha512-ud3l1YVuWXskZAKDaU6J9pS8fYAN1VPfO98H69SLAAKPstXNZvAr9BpG13vnC9C5sWh3wxvoWMOcFVSTj/wKLg==
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-3.9.0.tgz#4aafbfa5a53298377600ca9b219419fa898d05eb"
+  integrity sha512-4ntSay2SGWz9B+Hgzor9fuFHefY2/rNTwpxGk829oOOGEBsV5lPKhqBMfsVjyai5/0DoW/nztE+Nt8nGI7Bs1w==
 
 js-tokens@^4.0.0:
   version "4.0.0"
