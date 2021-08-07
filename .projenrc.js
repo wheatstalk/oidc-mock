@@ -50,7 +50,7 @@ const project = new pj.AwsCdkTypeScriptApp({
     'cdk.context.json',
   ],
 
-  minNodeVersion: '14.0.0',
+  minNodeVersion: '14.15.0',
 
   projenUpgradeSecret: 'YARN_UPGRADE_TOKEN',
   autoApproveUpgrades: true,
