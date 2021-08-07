@@ -28,7 +28,6 @@ const project = new pj.AwsCdkTypeScriptApp({
 
   devDeps: [
     '@types/aws-lambda@^8.10.72',
-    '@types/node@14',
     '@types/aws-serverless-express@^3.3.0',
     'nodemon@^2.0.7',
   ],
@@ -46,14 +45,25 @@ const project = new pj.AwsCdkTypeScriptApp({
       },
     },
   },
+
+  gitignore: [
+    'cdk.context.json',
+  ],
+
+  minNodeVersion: '14.0.0',
+
+  projenUpgradeSecret: 'YARN_UPGRADE_TOKEN',
+  autoApproveUpgrades: true,
+  autoApproveOptions: {
+    secret: 'GITHUB_TOKEN',
+    allowedUsernames: ['github-actions', 'github-actions[bot]', 'misterjoshua'],
+  },
 });
 
-project.addTask('dev', {
-  category: pj.tasks.TaskCategory.BUILD,
-  description: 'run the dev server',
-  exec: 'nodemon -w src --exec ts-node src/main-dev.ts',
-});
-
-project.gitignore.exclude('cdk.context.json');
+// project.addTask('dev', {
+//   category: pj.tasks.TaskCategory.BUILD,
+//   description: 'run the dev server',
+//   exec: 'nodemon -w src --exec ts-node src/main-dev.ts',
+// });
 
 project.synth();
