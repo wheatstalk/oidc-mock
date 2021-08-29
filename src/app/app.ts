@@ -53,7 +53,7 @@ async function jwksHandler(_req: express.Request, res: express.Response) {
     });
   } catch (e) {
     res.statusCode = 500;
-    res.send(e.message);
+    res.send(e instanceof Error ? e.message : 'Error');
   }
 }
 
@@ -71,7 +71,7 @@ async function authHandler(req: express.Request, res: express.Response) {
     }
   } catch (e) {
     res.statusCode = res.statusCode !== 200 ? res.statusCode : 500;
-    res.send(e.message);
+    res.send(e instanceof Error ? e.message : 'Error');
   }
 };
 
@@ -89,7 +89,7 @@ async function tokenHandler(req: express.Request, res: express.Response) {
     }
   } catch (e) {
     res.statusCode = res.statusCode !== 200 ? res.statusCode : 500;
-    res.send(e.message);
+    res.send(e instanceof Error ? e.message : 'Error');
   }
 }
 
