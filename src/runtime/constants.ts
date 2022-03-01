@@ -1,0 +1,1 @@
+export const ENV_OIDC_MOCK_TABLE = 'OIDC_MOCK_TABLE';

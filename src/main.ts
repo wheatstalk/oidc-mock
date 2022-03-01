@@ -1,13 +1,5 @@
-import * as cdk from 'aws-cdk-lib';
-import { OidcMockStack } from './cdk/oidc-mock-stack';
+import { App } from 'aws-cdk-lib';
 
-const env = {
-  account: process.env.CDK_DEFAULT_ACCOUNT ?? 'dummy-account',
-  region: process.env.CDK_DEFAULT_REGION ?? 'dummy-region',
-};
-
-const app = new cdk.App();
-
-new OidcMockStack(app, 'OidcMock-Dev', { env });
+const app = new App();
 
 app.synth();

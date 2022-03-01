@@ -21,3 +21,5 @@ tsconfig.tsbuildinfo
 !/assets/
 cdk.out/
 .cdk.staging/
+test/.tmp
+test/main.integ.snapshot

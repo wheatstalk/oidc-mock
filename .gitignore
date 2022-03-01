@@ -51,6 +51,15 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
+test/.tmp
+test/main.integ.snapshot/asset.*
+test/main.integ.snapshot/**/asset.*
+test/main.integ.snapshot/cdk.out
+test/main.integ.snapshot/**/cdk.out
+test/main.integ.snapshot/manifest.json
+test/main.integ.snapshot/**/manifest.json
+test/main.integ.snapshot/tree.json
+test/main.integ.snapshot/**/tree.json
 /.idea
 /cdk.context.json
 !/.github/workflows/upgrade.yml

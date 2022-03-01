@@ -20,6 +20,11 @@
       "type": "build"
     },
     {
+      "name": "@types/uuid",
+      "version": "8",
+      "type": "build"
+    },
+    {
       "name": "@typescript-eslint/eslint-plugin",
       "version": "^5",
       "type": "build"
@@ -30,8 +35,29 @@
       "type": "build"
     },
     {
+      "name": "@vendia/serverless-express",
+      "version": "^4.3.4",
+      "type": "build"
+    },
+    {
+      "name": "@wheatstalk/aws-cdk-exec",
+      "type": "build"
+    },
+    {
+      "name": "ajv",
+      "type": "build"
+    },
+    {
+      "name": "ajv-formats",
+      "type": "build"
+    },
+    {
       "name": "aws-cdk",
       "version": "^2.14.0",
+      "type": "build"
+    },
+    {
+      "name": "aws-sdk",
       "type": "build"
     },
     {
@@ -56,12 +82,30 @@
       "type": "build"
     },
     {
+      "name": "expect",
+      "type": "build"
+    },
+    {
+      "name": "express",
+      "version": "^4.17.1",
+      "type": "build"
+    },
+    {
+      "name": "got",
+      "type": "build"
+    },
+    {
       "name": "jest",
       "type": "build"
     },
     {
       "name": "jest-junit",
       "version": "^13",
+      "type": "build"
+    },
+    {
+      "name": "jose",
+      "version": "^3.7.1",
       "type": "build"
     },
     {
@@ -79,7 +123,16 @@
       "type": "build"
     },
     {
+      "name": "oidc-provider",
+      "version": "^7.1.1",
+      "type": "build"
+    },
+    {
       "name": "projen",
+      "type": "build"
+    },
+    {
+      "name": "source-map-support",
       "type": "build"
     },
     {
@@ -96,14 +149,13 @@
       "type": "build"
     },
     {
-      "name": "@types/uuid",
+      "name": "uuid",
       "version": "8",
-      "type": "runtime"
+      "type": "build"
     },
     {
-      "name": "@vendia/serverless-express",
-      "version": "^4.3.4",
-      "type": "runtime"
+      "name": "winston",
+      "type": "build"
     },
     {
       "name": "aws-cdk-lib",
@@ -113,26 +165,6 @@
     {
       "name": "constructs",
       "version": "^10.0.5",
-      "type": "runtime"
-    },
-    {
-      "name": "express",
-      "version": "^4.17.1",
-      "type": "runtime"
-    },
-    {
-      "name": "jose",
-      "version": "^3.7.1",
-      "type": "runtime"
-    },
-    {
-      "name": "oidc-provider",
-      "version": "^7.1.1",
-      "type": "runtime"
-    },
-    {
-      "name": "uuid",
-      "version": "8",
       "type": "runtime"
     }
   ],
