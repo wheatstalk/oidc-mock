@@ -202,7 +202,15 @@
       "name": "integ:main:test",
       "steps": [
         {
-          "exec": "cdk-exec --app test/.tmp/main.integ/deploy.cdk.out -at integ"
+          "exec": "cdk-exec --app test/.tmp/main.integ/deploy.cdk.out --no-output -at integ"
+        }
+      ]
+    },
+    "integ:main:test:refresh-token": {
+      "name": "integ:main:test:refresh-token",
+      "steps": [
+        {
+          "exec": "cdk-exec --app test/.tmp/main.integ/deploy.cdk.out --no-output -at integ=testRefreshTokenHandler"
         }
       ]
     },

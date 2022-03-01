@@ -22,6 +22,7 @@
     "integ:main:destroy": "npx projen integ:main:destroy",
     "integ:main:snapshot": "npx projen integ:main:snapshot",
     "integ:main:test": "npx projen integ:main:test",
+    "integ:main:test:refresh-token": "npx projen integ:main:test:refresh-token",
     "integ:main:watch": "npx projen integ:main:watch",
     "integ:snapshot-all": "npx projen integ:snapshot-all",
     "package": "npx projen package",

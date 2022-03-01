@@ -1,34 +1,34 @@
 import * as lambda from 'aws-lambda';
 import * as uuid from 'uuid';
-import { makeQueryString } from '../make-query-string';
+import { HttpUtil } from '../make-query-string';
 import { renderError } from './api';
-import { AuthStateDatabase, AuthResponseType } from './model';
-import { PkceCodeChallengeMethod } from './pkce';
+import { AuthResponseType, AuthStateDatabase } from './model';
+import { PkceChallengeMethod } from './pkce';
 import { Validator } from './validator';
 
 export interface AuthRequest {
-  scope: string | undefined;
   readonly response_type: AuthResponseType;
   readonly client_id: string;
   readonly redirect_uri?: string;
   readonly state?: string;
+  readonly scope?: string;
   readonly code_challenge?: string;
-  readonly code_challenge_method?: PkceCodeChallengeMethod;
+  readonly code_challenge_method?: PkceChallengeMethod;
 }
 
 const authRequestValidator = Validator.compile<AuthRequest>({
   type: 'object',
   properties: {
     response_type: { enum: [AuthResponseType.CODE] },
+    client_id: { type: 'string' },
     redirect_uri: {
       type: 'string',
       format: 'uri',
     },
-    client_id: { type: 'string' },
     state: { type: 'string' },
     scope: { type: 'string' },
     code_challenge: { type: 'string' },
-    code_challenge_method: { enum: [PkceCodeChallengeMethod.PLAIN, PkceCodeChallengeMethod.S256] },
+    code_challenge_method: { enum: [PkceChallengeMethod.PLAIN, PkceChallengeMethod.S256] },
   },
   required: [
     'response_type',
@@ -39,12 +39,12 @@ const authRequestValidator = Validator.compile<AuthRequest>({
 export async function auth(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
   const authRequest = authRequestValidator.validate({
     response_type: event.queryStringParameters?.response_type as AuthResponseType,
-    redirect_uri: event.queryStringParameters?.redirect_uri as string,
     client_id: event.queryStringParameters?.client_id as string,
+    redirect_uri: event.queryStringParameters?.redirect_uri as string,
     state: event.queryStringParameters?.state,
     scope: event.queryStringParameters?.scope,
     code_challenge: event.queryStringParameters?.code_challenge,
-    code_challenge_method: event.queryStringParameters?.code_challenge_method as PkceCodeChallengeMethod | undefined,
+    code_challenge_method: event.queryStringParameters?.code_challenge_method as PkceChallengeMethod | undefined,
   });
 
   if (authRequest.code_challenge_method || authRequest.code_challenge) {
@@ -64,19 +64,17 @@ export async function auth(event: lambda.APIGatewayProxyEvent): Promise<lambda.A
     code: uuid.v4(),
     responseType: authRequest.response_type,
     clientId: authRequest.client_id,
-    pkce: pkce,
     redirectUri: authRequest.redirect_uri,
+    pkce: pkce,
     state: authRequest.state,
     scope: authRequest.scope,
   });
 
-  const queryString = makeQueryString({
+  const redirectUri = authRequest.redirect_uri ?? 'https://www.example.com';
+  const location = HttpUtil.makeUrl(redirectUri, {
     code: model.code,
     state: authRequest.state,
   });
-
-  const redirectUri = authRequest.redirect_uri ?? 'https://www.example.com';
-  const location = `${redirectUri}?${queryString}`;
 
   return {
     statusCode: 302,

@@ -65,8 +65,13 @@ project.bundler.addBundle('src/runtime/api.lambda.ts', {
 project.addGitIgnore('/.idea');
 project.addGitIgnore('/cdk.context.json');
 
+const cdkExec = 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out --no-output';
 project.addTask('integ:main:test', {
-  exec: 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out -at integ',
+  exec: `${cdkExec} -at integ`,
+});
+
+project.addTask('integ:main:test:refresh-token', {
+  exec: `${cdkExec} -at integ=testRefreshTokenHandler`,
 });
 
 project.synth();

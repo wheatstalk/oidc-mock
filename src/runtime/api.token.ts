@@ -1,4 +1,6 @@
 import * as lambda from 'aws-lambda';
+import * as uuid from 'uuid';
+import { HttpUtil } from '../make-query-string';
 import { renderError } from './api';
 import { Logger } from './logger';
 import { AuthStateDatabase } from './model';
@@ -130,9 +132,9 @@ export async function token(event: lambda.APIGatewayProxyEvent): Promise<lambda.
   //   return renderError(400, `Unsupported content type ${event.headers['content-type']}`);
   // }
 
-  const request = decodeFormUrlEncoding(event.body);
+  const request = HttpUtil.decodeFormUrlEncoding(event.body);
   const authorization = event.headers.authorization
-    ? decodeAuthorizationHeader(event.headers.authorization)
+    ? HttpUtil.decodeAuthorizationHeader(event.headers.authorization)
     : {};
 
   const tokenRequest = tokenRequestValidator.validate({
@@ -145,39 +147,31 @@ export async function token(event: lambda.APIGatewayProxyEvent): Promise<lambda.
   switch (tokenRequest.grant_type) {
     case TokenGrantType.AUTHORIZATION_CODE:
       return authorizationCode(tokenRequest);
+    case TokenGrantType.REFRESH_TOKEN:
+      return refreshToken(tokenRequest);
     default:
       throw new Error(`Unsupported grant type: ${tokenRequest.grant_type}`);
   }
 }
 
-function decodeFormUrlEncoding(formUrlEncoded: string) {
-  return Object.fromEntries(
-    formUrlEncoded
-      .split('&')
-      .map(item => {
-        const [key, value] = item.split('=');
-        return [decodeURIComponent(key), decodeURIComponent(value)];
-      }),
-  );
-}
-
-function decodeAuthorizationHeader(authorizationHeader: string) {
-  const [type, secret] = authorizationHeader.split(' ');
-  if (type !== 'Basic') {
-    throw new Error('Unsupported authorization type');
+export class TokenUtil {
+  static generateAccessToken() {
+    return this.generateToken('access-token');
   }
 
-  const secretDecoded = Buffer.from(secret, 'base64').toString();
-  const [client_id, client_secret] = secretDecoded.split(':');
+  static generateRefreshToken() {
+    return this.generateToken('refresh-token');
+  }
 
-  return {
-    client_id,
-    client_secret,
-  };
+  static generateToken(type: string) {
+    return `${type}-${uuid.v4()}`;
+  }
 }
 
 async function authorizationCode(tokenRequest: AuthorizationCodeRequest): Promise<lambda.APIGatewayProxyResult> {
-  const authState = await AuthStateDatabase.get().load(tokenRequest.code);
+  const authStateDatabase = AuthStateDatabase.get();
+
+  const authState = await authStateDatabase.load(tokenRequest.code);
   if (!authState) {
     return renderError(404, 'Code not found');
   }
@@ -206,12 +200,46 @@ async function authorizationCode(tokenRequest: AuthorizationCodeRequest): Promis
     }
   }
 
+  const newAuthState = await authStateDatabase.store({
+    ...authState,
+    refreshToken: TokenUtil.generateRefreshToken(),
+  });
+
   return {
     statusCode: 200,
     body: JSON.stringify({
-      access_token: 'some-access-token',
-      refresh_token: 'some-refresh-token',
-      model: authState,
+      access_token: TokenUtil.generateAccessToken(),
+      refresh_token: newAuthState.refreshToken,
+      authState: newAuthState,
+    }),
+  };
+}
+
+async function refreshToken(tokenRequest: RefreshTokenRequest): Promise<lambda.APIGatewayProxyResult> {
+  const authStateDatabase = AuthStateDatabase.get();
+  const authState = await authStateDatabase.loadRefreshToken(tokenRequest.refresh_token);
+
+  if (!authState) {
+    return renderError(404, 'Refresh token not found');
+  }
+
+  if (authState.clientId !== tokenRequest.client_id) {
+    return renderError(400, 'Mismatched client id');
+  }
+
+  Logger.debug('Fetched token', { token: authState });
+
+  const newAuthState = await authStateDatabase.store({
+    ...authState,
+    refreshToken: TokenUtil.generateRefreshToken(),
+  });
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      access_token: TokenUtil.generateAccessToken(),
+      refresh_token: newAuthState.refreshToken,
+      authState: newAuthState,
     }),
   };
 }

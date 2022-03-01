@@ -15,19 +15,22 @@ const mockApi = new OidcMockApi(stack, 'OidcMockApi', {
 class IntegTest extends aws_lambda_nodejs.NodejsFunction {
   constructor(scope: Construct, id: string) {
     super(scope, id, {
-      entry: path.join(__dirname, 'main.integ.Test.ts'),
+      entry: path.join(__dirname, 'main.integ-test.ts'),
       handler: id,
       timeout: Duration.seconds(15),
       environment: {
         API_URL: mockApi.restApi.url,
+        NODE_OPTIONS: '--enable-source-maps',
       },
     });
     Tags.of(this).add('integ', id);
   }
 }
 
-new IntegTest(stack, 'testAuthorizationCodeSimple');
-new IntegTest(stack, 'testAuthorizationCodeWithState');
-new IntegTest(stack, 'testAuthorizationCodeTokenWithPKCE');
+
+new IntegTest(stack, 'testAuthorizationCodeSimpleHandler');
+new IntegTest(stack, 'testAuthorizationCodeWithStateHandler');
+new IntegTest(stack, 'testAuthorizationCodeTokenWithPKCES256Handler');
+new IntegTest(stack, 'testRefreshTokenHandler');
 
 app.synth();

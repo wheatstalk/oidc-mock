@@ -16,5 +16,17 @@ export class OidcMockTable extends aws_dynamodb.Table {
       billingMode: aws_dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY,
     });
+
+    this.addGlobalSecondaryIndex({
+      indexName: 'GSI1',
+      partitionKey: {
+        type: aws_dynamodb.AttributeType.STRING,
+        name: 'GSI1PK',
+      },
+      sortKey: {
+        type: aws_dynamodb.AttributeType.STRING,
+        name: 'GSI1SK',
+      },
+    });
   }
 }
