@@ -1,10 +1,11 @@
-import * as api from '@aws-cdk/aws-apigateway';
-import * as acm from '@aws-cdk/aws-certificatemanager';
-import * as lambda from '@aws-cdk/aws-lambda-nodejs';
-import * as r53 from '@aws-cdk/aws-route53';
-import * as r53targets from '@aws-cdk/aws-route53-targets';
-import * as ssm from '@aws-cdk/aws-ssm';
-import * as cdk from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib';
+import * as api from 'aws-cdk-lib/aws-apigateway';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as lambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as r53 from 'aws-cdk-lib/aws-route53';
+import * as r53targets from 'aws-cdk-lib/aws-route53-targets';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { Construct } from 'constructs';
 
 export interface DomainNameConfig {
   readonly certificateArn: string;
@@ -21,7 +22,7 @@ export interface OidcMockStackProps extends cdk.StackProps {
 }
 
 export class OidcMockStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: OidcMockStackProps = {}) {
+  constructor(scope: Construct, id: string, props: OidcMockStackProps = {}) {
     super(scope, id, props);
 
     let domainNameConfig: DomainNameConfig | undefined;
@@ -71,7 +72,7 @@ export class OidcMockStack extends cdk.Stack {
   }
 }
 
-function lookupDomainNameConfig(scope: cdk.Construct, ssmPath: string): DomainNameConfig | undefined {
+function lookupDomainNameConfig(scope: Construct, ssmPath: string): DomainNameConfig | undefined {
   const domainNameConfigJson = ssm.StringParameter.valueFromLookup(scope, ssmPath);
 
   if (!/dummy/i.test(domainNameConfigJson)) {
