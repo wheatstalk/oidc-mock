@@ -173,9 +173,10 @@ async function authorizationCodeHandler(tokenRequest: AuthorizationCodeRequest):
     return renderError(403, 'Mismatched redirect uri');
   }
 
-  if (authState.state !== tokenRequest.state) {
-    return renderError(403, 'Mismatched state');
-  }
+  // OpenID Connect Playground doesn't like this:
+  // if (authState.state !== tokenRequest.state) {
+  //   return renderError(403, 'Mismatched state');
+  // }
 
   if (authState.pkce) {
     if (!tokenRequest.code_verifier) {
