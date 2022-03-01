@@ -36,7 +36,7 @@ const authRequestValidator = Validator.compile<AuthRequest>({
   ],
 });
 
-export async function auth(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
+export async function authHandler(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
   const authRequest = authRequestValidator.validate({
     response_type: event.queryStringParameters?.response_type as AuthResponseType,
     client_id: event.queryStringParameters?.client_id as string,

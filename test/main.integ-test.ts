@@ -3,7 +3,7 @@ import expect from 'expect';
 import got, * as got_ from 'got';
 import * as uuid from 'uuid';
 import { HttpUtil } from '../src/make-query-string';
-import { TokenGrantType } from '../src/runtime/api.token';
+import { TokenGrantType, TokenScope } from '../src/runtime/api.token';
 import { AuthResponseType } from '../src/runtime/model';
 import { PkceChallengeMethod, PkceUtil } from '../src/runtime/pkce';
 
@@ -12,6 +12,7 @@ export const testAuthorizationCodeSimpleHandler = testHandler(testAuthorizationC
 export const testAuthorizationCodeWithStateHandler = testHandler(testAuthorizationCodeWithState);
 export const testAuthorizationCodeTokenWithPKCES256Handler = testHandler(testAuthorizationCodeTokenWithPKCES256);
 export const testRefreshTokenHandler = testHandler(testRefreshToken);
+export const testIdTokenHandler = testHandler(testIdToken);
 
 
 const API_URL = process.env.API_URL as string;
@@ -27,12 +28,14 @@ export async function testAuthorizationCodeSimple() {
   });
 
   // WHEN
-  const res: any = await got(authUrl, { followRedirect: false }).json();
+  const authRes: any = await got(authUrl, { followRedirect: false }).json();
 
   // THEN
-  expect(res).toHaveProperty('code');
-  expect(res).toHaveProperty('location', expect.stringMatching(/^https?:\/\//));
-  expect(res).toHaveProperty('location', expect.stringContaining(`code=${encodeURIComponent(res.code)}`));
+  expect(authRes).toHaveProperty('code');
+  expect(authRes).toHaveProperty('location', expect.stringMatching(/^https?:\/\//));
+  expect(authRes).toHaveProperty('location', expect.stringContaining(`code=${encodeURIComponent(authRes.code)}`));
+
+  return authRes;
 }
 
 export async function testAuthorizationCodeWithState() {
@@ -45,10 +48,12 @@ export async function testAuthorizationCodeWithState() {
   });
 
   // WHEN
-  const res: any = await got(authUrl, { followRedirect: false }).json();
+  const authRes: any = await got(authUrl, { followRedirect: false }).json();
 
   // THEN
-  expect(res).toHaveProperty('location', expect.stringContaining('state=foo-bar'));
+  expect(authRes).toHaveProperty('location', expect.stringContaining('state=foo-bar'));
+
+  return authRes;
 }
 
 export async function testAuthorizationCodeTokenWithPKCES256() {
@@ -81,7 +86,10 @@ export async function testAuthorizationCodeTokenWithPKCES256() {
 
   // THEN
   expect(tokenRes).toHaveProperty('access_token', expect.stringContaining('access-token'));
-  expect(tokenRes).toHaveProperty('refresh_token', expect.stringContaining('refresh-token'));
+  expect(tokenRes).not.toHaveProperty('refresh_token');
+  expect(tokenRes).not.toHaveProperty('id_token');
+
+  return tokenRes;
 }
 
 export async function testRefreshToken() {
@@ -90,10 +98,12 @@ export async function testRefreshToken() {
   const clientSecret = 'some-secret';
   const codeVerifier = uuid.v4();
   const state = 'foo-bar';
+  const scope = TokenScope.OFFLINE_ACCESS;
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
     response_type: AuthResponseType.CODE,
     client_id: clientId,
     state: state,
+    scope: scope,
     code_challenge: PkceUtil.generateS256CodeChallenge(codeVerifier),
     code_challenge_method: PkceChallengeMethod.S256,
   });
@@ -105,10 +115,13 @@ export async function testRefreshToken() {
       client_id: clientId,
       client_secret: clientSecret,
       state: state,
+      scope: scope,
       code: authRes.code,
       code_verifier: codeVerifier,
     },
   }).json();
+
+  expect(tokenRes).toHaveProperty('refresh_token', expect.stringContaining('refresh-token'));
 
   // WHEN
   const refreshTokenRes1: any = await got.post(TOKEN_URL, {
@@ -119,6 +132,8 @@ export async function testRefreshToken() {
       refresh_token: tokenRes.refresh_token,
     },
   }).json();
+
+  expect(refreshTokenRes1).toHaveProperty('refresh_token', expect.stringContaining('refresh-token'));
 
   await new Promise(res => setTimeout(res, 5000));
 
@@ -132,9 +147,50 @@ export async function testRefreshToken() {
   }).json();
 
   // THEN
-  expect(refreshTokenRes1).toHaveProperty('refresh_token', expect.stringContaining('refresh-token'));
   expect(refreshTokenRes1.refresh_token).not.toEqual(tokenRes.refresh_token);
   expect(refreshTokenRes2.refresh_token).not.toEqual(refreshTokenRes1.refresh_token);
+
+  return refreshTokenRes2;
+}
+
+export async function testIdToken() {
+  // GIVEN
+  const clientId = uuid.v4();
+  const clientSecret = 'some-secret';
+  const codeVerifier = uuid.v4();
+  const state = 'foo-bar';
+  const scope = [TokenScope.OPENID, TokenScope.OIDC_MOCK_AUTH_STATE].join(' ');
+  const authUrl = HttpUtil.makeUrl(AUTH_URL, {
+    response_type: AuthResponseType.CODE,
+    client_id: clientId,
+    state: state,
+    scope: scope,
+    code_challenge: PkceUtil.generateS256CodeChallenge(codeVerifier),
+    code_challenge_method: PkceChallengeMethod.S256,
+  });
+
+  const authRes: any = await got(authUrl, { followRedirect: false }).json();
+
+  // WHEN
+  const tokenRes: any = await got.post(TOKEN_URL, {
+    form: {
+      grant_type: TokenGrantType.AUTHORIZATION_CODE,
+      client_id: clientId,
+      client_secret: clientSecret,
+      state: state,
+      scope: scope,
+      code: authRes.code,
+      code_verifier: codeVerifier,
+    },
+  }).json();
+
+  // THEN
+  expect(tokenRes).toHaveProperty('id_token', expect.stringMatching(/\..*\./));
+  expect(tokenRes).toHaveProperty('auth_state', expect.objectContaining({
+    clientId: expect.any(String),
+  }));
+
+  return tokenRes;
 }
 
 function testHandler(cb: () => Promise<void>) {
@@ -151,4 +207,3 @@ function testHandler(cb: () => Promise<void>) {
     }
   }
 }
-

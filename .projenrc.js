@@ -55,6 +55,7 @@ new awscdk.IntegrationTestAutoDiscover(project, {
 });
 
 project.eslint.allowDevDeps('src/runtime/**');
+project.eslint.allowDevDeps('src/jwks/**');
 project.bundler.addBundle('src/runtime/api.lambda.ts', {
   platform: 'node',
   target: 'node14',
@@ -65,7 +66,7 @@ project.bundler.addBundle('src/runtime/api.lambda.ts', {
 project.addGitIgnore('/.idea');
 project.addGitIgnore('/cdk.context.json');
 
-const cdkExec = 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out --no-output';
+const cdkExec = 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out';
 project.addTask('integ:main:test', {
   exec: `${cdkExec} -at integ`,
 });

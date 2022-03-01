@@ -1,9 +1,10 @@
 import * as lambda from 'aws-lambda';
 import * as uuid from 'uuid';
+import { Jwks } from '../jwks';
 import { HttpUtil } from '../make-query-string';
 import { renderError } from './api';
 import { Logger } from './logger';
-import { AuthStateDatabase } from './model';
+import { AuthState, AuthStateDatabase, TokenCollection } from './model';
 import { PkceUtil } from './pkce';
 import { Schema, Validator } from './validator';
 
@@ -121,7 +122,7 @@ const tokenRequestValidator = Validator.compile<TokenRequest>({
   ],
 });
 
-export async function token(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
+export async function tokenHandler(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
   Logger.debug('tokenHandler event', { event });
 
   if (!event.body) {
@@ -146,29 +147,15 @@ export async function token(event: lambda.APIGatewayProxyEvent): Promise<lambda.
 
   switch (tokenRequest.grant_type) {
     case TokenGrantType.AUTHORIZATION_CODE:
-      return authorizationCode(tokenRequest);
+      return authorizationCodeHandler(tokenRequest);
     case TokenGrantType.REFRESH_TOKEN:
-      return refreshToken(tokenRequest);
+      return refreshTokenHandler(tokenRequest);
     default:
       throw new Error(`Unsupported grant type: ${tokenRequest.grant_type}`);
   }
 }
 
-export class TokenUtil {
-  static generateAccessToken() {
-    return this.generateToken('access-token');
-  }
-
-  static generateRefreshToken() {
-    return this.generateToken('refresh-token');
-  }
-
-  static generateToken(type: string) {
-    return `${type}-${uuid.v4()}`;
-  }
-}
-
-async function authorizationCode(tokenRequest: AuthorizationCodeRequest): Promise<lambda.APIGatewayProxyResult> {
+async function authorizationCodeHandler(tokenRequest: AuthorizationCodeRequest): Promise<lambda.APIGatewayProxyResult> {
   const authStateDatabase = AuthStateDatabase.get();
 
   const authState = await authStateDatabase.load(tokenRequest.code);
@@ -200,22 +187,17 @@ async function authorizationCode(tokenRequest: AuthorizationCodeRequest): Promis
     }
   }
 
+  const tokenCollection = await TokenUtil.generateTokenCollection(authState);
+
   const newAuthState = await authStateDatabase.store({
     ...authState,
-    refreshToken: TokenUtil.generateRefreshToken(),
+    ...tokenCollection,
   });
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      access_token: TokenUtil.generateAccessToken(),
-      refresh_token: newAuthState.refreshToken,
-      authState: newAuthState,
-    }),
-  };
+  return renderTokenResponse(newAuthState);
 }
 
-async function refreshToken(tokenRequest: RefreshTokenRequest): Promise<lambda.APIGatewayProxyResult> {
+async function refreshTokenHandler(tokenRequest: RefreshTokenRequest): Promise<lambda.APIGatewayProxyResult> {
   const authStateDatabase = AuthStateDatabase.get();
   const authState = await authStateDatabase.loadRefreshToken(tokenRequest.refresh_token);
 
@@ -229,18 +211,76 @@ async function refreshToken(tokenRequest: RefreshTokenRequest): Promise<lambda.A
 
   Logger.debug('Fetched token', { token: authState });
 
+  const tokenCollection = await TokenUtil.generateTokenCollection(authState);
   const newAuthState = await authStateDatabase.store({
     ...authState,
-    refreshToken: TokenUtil.generateRefreshToken(),
+    ...tokenCollection,
   });
+
+  return renderTokenResponse(newAuthState);
+}
+
+export type ScopeMap = Record<string, boolean>;
+export function scopeToMap(scope?: string): ScopeMap {
+  const scopes = scope?.split(/\s+/) ?? [];
+  return Object.fromEntries(scopes.map(name => [name, true]));
+}
+
+function renderTokenResponse(authState: AuthState): lambda.APIGatewayProxyResult {
+  const scopeMap = scopeToMap(authState.scope);
 
   return {
     statusCode: 200,
     body: JSON.stringify({
-      access_token: TokenUtil.generateAccessToken(),
-      refresh_token: newAuthState.refreshToken,
-      authState: newAuthState,
+      id_token: authState.idToken,
+      access_token: authState.accessToken,
+      refresh_token: authState.refreshToken,
+      auth_state: scopeMap[TokenScope.OIDC_MOCK_AUTH_STATE] ? authState : undefined,
     }),
   };
 }
 
+export enum TokenScope {
+  OPENID = 'openid',
+  OFFLINE_ACCESS = 'offline_access',
+  OIDC_MOCK_AUTH_STATE = 'oidc-mock:auth_state',
+}
+
+export class TokenUtil {
+  static async generateTokenCollection(authState: AuthState): Promise<TokenCollection> {
+    const scopeMap = scopeToMap(authState.scope);
+    Logger.debug('scopeMap', { scopeMap });
+
+    const accessToken = this.generateAccessToken();
+
+    const idToken = !scopeMap[TokenScope.OPENID] ? undefined : await Jwks.signJwt({
+      issuer: 'oidc-mock',
+      audience: 'some-api',
+      subject: authState.clientId,
+      payload: {
+        client_id: authState.clientId,
+        scope: authState.scope,
+      },
+    });
+
+    const refreshToken = !scopeMap[TokenScope.OFFLINE_ACCESS] ? undefined : this.generateRefreshToken();
+
+    return {
+      idToken,
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  static generateAccessToken() {
+    return this.generateToken('access-token');
+  }
+
+  static generateRefreshToken() {
+    return this.generateToken('refresh-token');
+  }
+
+  static generateToken(type: string) {
+    return `${type}-${uuid.v4()}`;
+  }
+}

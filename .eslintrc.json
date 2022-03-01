@@ -146,7 +146,8 @@
         "devDependencies": [
           "**/test/**",
           "**/build-tools/**",
-          "src/runtime/**"
+          "src/runtime/**",
+          "src/jwks/**"
         ],
         "optionalDependencies": false,
         "peerDependencies": true

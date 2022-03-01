@@ -27,10 +27,10 @@ class IntegTest extends aws_lambda_nodejs.NodejsFunction {
   }
 }
 
-
 new IntegTest(stack, 'testAuthorizationCodeSimpleHandler');
 new IntegTest(stack, 'testAuthorizationCodeWithStateHandler');
 new IntegTest(stack, 'testAuthorizationCodeTokenWithPKCES256Handler');
 new IntegTest(stack, 'testRefreshTokenHandler');
+new IntegTest(stack, 'testIdTokenHandler');
 
 app.synth();

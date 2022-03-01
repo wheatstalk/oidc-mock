@@ -7,7 +7,13 @@ export enum AuthResponseType {
   CODE = 'code',
 }
 
-export interface AuthState {
+export interface TokenCollection {
+  readonly idToken?: string;
+  readonly accessToken?: string;
+  readonly refreshToken?: string;
+}
+
+export interface AuthState extends TokenCollection {
   readonly code: string;
   readonly responseType: AuthResponseType;
   readonly clientId: string;
@@ -15,7 +21,6 @@ export interface AuthState {
   readonly state?: string;
   readonly scope?: string;
   readonly pkce?: Pkce;
-  readonly refreshToken?: string;
 }
 
 export interface AuthStateDatabaseOptions {
