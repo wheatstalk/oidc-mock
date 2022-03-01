@@ -2,6 +2,8 @@
 !/.gitattributes
 !/.projen/tasks.json
 !/.projen/deps.json
+!/.projen/files.json
+!/.github/workflows/pull-request-lint.yml
 !/.github/workflows/auto-approve.yml
 !/.github/workflows/stale.yml
 !/package.json
@@ -30,7 +32,6 @@ jspm_packages/
 *.tgz
 .yarn-integrity
 .cache
-cdk.context.json
 !/.projenrc.js
 /test-reports/
 junit.xml
@@ -40,14 +41,16 @@ junit.xml
 !/.github/pull_request_template.md
 !/test/
 !/tsconfig.json
+!/tsconfig.dev.json
 !/src/
 /lib
 /dist/
-!/tsconfig.jest.json
 !/.eslintrc.json
-!/tsconfig.eslint.json
-cdk.out/
+/assets/
+!/cdk.json
+/cdk.out/
 .cdk.staging/
 .parcel-cache/
-!/cdk.json
+/.idea
+/cdk.context.json
 !/.github/workflows/upgrade.yml

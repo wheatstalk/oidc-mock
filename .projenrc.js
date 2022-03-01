@@ -1,10 +1,12 @@
-const pj = require('projen');
+const { awscdk } = require('projen');
 
-const project = new pj.AwsCdkTypeScriptApp({
+const project = new awscdk.AwsCdkTypeScriptApp({
   cdkVersion: '1.73.0',
   defaultReleaseBranch: 'main',
-  jsiiFqn: 'projen.AwsCdkTypeScriptApp',
   name: '@wheatstalk/oidc-mock',
+  authorName: 'Josh Kellendonk',
+  authorEmail: 'joshkellendonk@gmail.com',
+  repository: 'https://github.com/wheatstalk/oidc-mock.git',
 
   cdkDependencies: [
     '@aws-cdk/aws-apigateway',
@@ -32,38 +34,18 @@ const project = new pj.AwsCdkTypeScriptApp({
     'nodemon@^2.0.7',
   ],
 
-  tsconfig: {
-    compilerOptions: {
-      esModuleInterop: true,
-    },
+  depsUpgrade: true,
+  depsUpgradeOptions: {
+    ignoreProjen: false,
   },
 
-  jestOptions: {
-    typescriptConfig: {
-      compilerOptions: {
-        esModuleInterop: true,
-      },
-    },
-  },
-
-  gitignore: [
-    'cdk.context.json',
-  ],
-
-  minNodeVersion: '14.15.0',
-
-  projenUpgradeSecret: 'YARN_UPGRADE_TOKEN',
   autoApproveUpgrades: true,
   autoApproveOptions: {
-    secret: 'GITHUB_TOKEN',
-    allowedUsernames: ['github-actions', 'github-actions[bot]', 'misterjoshua'],
+    allowedUsernames: ['misterjoshua'],
   },
 });
 
-// project.addTask('dev', {
-//   category: pj.tasks.TaskCategory.BUILD,
-//   description: 'run the dev server',
-//   exec: 'nodemon -w src --exec ts-node src/main-dev.ts',
-// });
+project.addGitIgnore('/.idea');
+project.addGitIgnore('/cdk.context.json');
 
 project.synth();
