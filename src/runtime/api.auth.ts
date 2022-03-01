@@ -3,8 +3,8 @@ import * as uuid from 'uuid';
 import { makeQueryString } from '../make-query-string';
 import { renderError } from './api';
 import { AuthStateDatabase, AuthResponseType } from './model';
-import { Validator } from './validator';
 import { PkceCodeChallengeMethod } from './pkce';
+import { Validator } from './validator';
 
 export interface AuthRequest {
   scope: string | undefined;

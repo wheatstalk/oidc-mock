@@ -8,17 +8,20 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   authorEmail: 'joshkellendonk@gmail.com',
   repository: 'https://github.com/wheatstalk/oidc-mock.git',
 
+  deps: [
+    '@vendia/serverless-express@^4.3.4',
+    'express@^4.17.1',
+    'uuid@8',
+  ],
+
   devDeps: [
     '@types/aws-lambda@^8.10.72',
     '@types/aws-serverless-express@^3.3.0',
     'nodemon@^2.0.7',
     'source-map-support',
-    '@vendia/serverless-express@^4.3.4',
     '@types/uuid@8',
     'oidc-provider@^7.1.1',
-    'express@^4.17.1',
     'jose@^3.7.1',
-    'uuid@8',
     'winston',
     'ajv',
     'ajv-formats',
