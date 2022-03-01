@@ -1,7 +1,7 @@
 const { awscdk } = require('projen');
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.14.0',
+  cdkVersion: '2.13.0',
   defaultReleaseBranch: 'main',
   name: '@wheatstalk/oidc-mock',
   authorName: 'Josh Kellendonk',
