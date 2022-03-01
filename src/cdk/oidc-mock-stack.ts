@@ -1,11 +1,12 @@
+import * as path from 'path';
 import * as cdk from 'aws-cdk-lib';
 import * as api from 'aws-cdk-lib/aws-apigateway';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import * as lambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as r53 from 'aws-cdk-lib/aws-route53';
 import * as r53targets from 'aws-cdk-lib/aws-route53-targets';
-import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
+import { lookupDomainNameConfig } from '../lookup-domain-name-config';
 
 export interface DomainNameConfig {
   readonly certificateArn: string;
@@ -30,7 +31,11 @@ export class OidcMockStack extends cdk.Stack {
       domainNameConfig = lookupDomainNameConfig(this, props.domainNameConfigSsmPath);
     }
 
-    const handler = new lambda.NodejsFunction(this, 'api-handler');
+    const handler = new lambda.Function(this, 'api-handler', {
+      code: lambda.Code.fromAsset(path.join(__dirname, '..', '..', 'assets', 'app', 'api.lambda')),
+      handler: 'index.handler',
+      runtime: lambda.Runtime.NODEJS_14_X,
+    });
     const restApi = new api.LambdaRestApi(this, 'Api', {
       restApiName: cdk.Names.uniqueId(this),
       handler: handler,
@@ -72,24 +77,3 @@ export class OidcMockStack extends cdk.Stack {
   }
 }
 
-function lookupDomainNameConfig(scope: Construct, ssmPath: string): DomainNameConfig | undefined {
-  const domainNameConfigJson = ssm.StringParameter.valueFromLookup(scope, ssmPath);
-
-  if (!/dummy/i.test(domainNameConfigJson)) {
-    const domainNameConfig = JSON.parse(domainNameConfigJson) as DomainNameConfig;
-
-    if (!domainNameConfig.certificateArn) {
-      throw new Error('Domain Name Config is missing `certificateArn`');
-    }
-    if (!domainNameConfig.recordName) {
-      throw new Error('Domain Name Config is missing `recordName`');
-    }
-    if (!domainNameConfig.domainName) {
-      throw new Error('Domain Name Config is missing `domainName`');
-    }
-
-    return domainNameConfig;
-  } else {
-    return undefined;
-  }
-}

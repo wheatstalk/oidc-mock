@@ -7,6 +7,8 @@
   "scripts": {
     "build": "npx projen build",
     "bundle": "npx projen bundle",
+    "bundle:app/api.lambda": "npx projen bundle:app/api.lambda",
+    "bundle:app/api.lambda:watch": "npx projen bundle:app/api.lambda:watch",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
     "default": "npx projen default",

@@ -32,6 +32,15 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   autoApproveOptions: {
     allowedUsernames: ['misterjoshua'],
   },
+
+  lambdaAutoDiscover: false,
+  integrationTestAutoDiscover: false,
+});
+
+project.bundler.addBundle('src/app/api.lambda.ts', {
+  platform: 'node',
+  target: 'node14',
+  sourcemap: true,
 });
 
 project.addGitIgnore('/.idea');

@@ -1,5 +1,5 @@
 import express from 'express';
-import { AuthCodeFlow } from './auth-code-flow/controller';
+import { AuthCodeFlow } from './auth-code-flow';
 import { JWK_PAIR } from './jwk';
 
 const AUTH_PATH = '/auth';
