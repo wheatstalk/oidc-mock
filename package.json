@@ -1,46 +1,63 @@
 {
   "name": "@wheatstalk/oidc-mock",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wheatstalk/oidc-mock.git"
+  },
   "scripts": {
+    "build": "npx projen build",
+    "bundle": "npx projen bundle",
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
-    "test:compile": "npx projen test:compile",
-    "test": "npx projen test",
-    "build": "npx projen build",
-    "test:watch": "npx projen test:watch",
-    "test:update": "npx projen test:update",
     "default": "npx projen default",
-    "eslint": "npx projen eslint",
-    "synth": "npx projen synth",
     "deploy": "npx projen deploy",
     "destroy": "npx projen destroy",
     "diff": "npx projen diff",
+    "eject": "npx projen eject",
+    "eslint": "npx projen eslint",
+    "package": "npx projen package",
+    "post-compile": "npx projen post-compile",
+    "post-upgrade": "npx projen post-upgrade",
+    "pre-compile": "npx projen pre-compile",
+    "synth": "npx projen synth",
+    "synth:silent": "npx projen synth:silent",
+    "test": "npx projen test",
+    "test:update": "npx projen test:update",
+    "test:watch": "npx projen test:watch",
     "upgrade": "npx projen upgrade",
+    "watch": "npx projen watch",
     "projen": "npx projen"
   },
+  "author": {
+    "name": "Josh Kellendonk",
+    "email": "joshkellendonk@gmail.com",
+    "organization": false
+  },
   "devDependencies": {
+    "@aws-cdk/assert": "^1.73.0",
     "@types/aws-lambda": "^8.10.72",
     "@types/aws-serverless-express": "^3.3.0",
     "@types/jest": "^26.0.24",
-    "@types/node": "^14.15.0",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@types/node": "^12",
+    "@typescript-eslint/eslint-plugin": "^5",
+    "@typescript-eslint/parser": "^5",
     "aws-cdk": "^1.73.0",
-    "eslint": "^7.32.0",
+    "esbuild": "^0.14.23",
+    "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-import": "^2.25.4",
     "jest": "^26.6.3",
-    "jest-junit": "^12",
-    "json-schema": "^0.3.0",
+    "jest-junit": "^13",
+    "json-schema": "^0.4.0",
     "nodemon": "^2.0.7",
-    "npm-check-updates": "^11",
-    "projen": "^0.29.17",
+    "npm-check-updates": "^12",
+    "projen": "^0.52.50",
     "ts-jest": "^26.5.6",
     "ts-node": "^9",
-    "typescript": "^4.4.3"
+    "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@aws-cdk/assert": "^1.73.0",
     "@aws-cdk/aws-apigateway": "^1.73.0",
     "@aws-cdk/aws-certificatemanager": "^1.73.0",
     "@aws-cdk/aws-lambda": "^1.73.0",
@@ -52,21 +69,18 @@
     "@aws-cdk/core": "^1.73.0",
     "@types/uuid": "8",
     "@vendia/serverless-express": "^4.3.4",
+    "constructs": "^3.2.27",
     "express": "^4.17.1",
     "jose": "^3.7.1",
     "oidc-provider": "^7.1.1",
     "uuid": "8"
   },
-  "bundledDependencies": [],
-  "engines": {
-    "node": ">= 14.15.0"
-  },
   "license": "Apache-2.0",
   "version": "0.0.0",
   "jest": {
     "testMatch": [
-      "**/__tests__/**/*.ts?(x)",
-      "**/?(*.)+(spec|test).ts?(x)"
+      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
+      "<rootDir>/(test|src)/**/?(*.)+(spec|test).ts?(x)"
     ],
     "clearMocks": true,
     "collectCoverage": true,
@@ -74,6 +88,7 @@
       "json",
       "lcov",
       "clover",
+      "cobertura",
       "text"
     ],
     "coverageDirectory": "coverage",
@@ -98,7 +113,7 @@
     "preset": "ts-jest",
     "globals": {
       "ts-jest": {
-        "tsconfig": "tsconfig.jest.json"
+        "tsconfig": "tsconfig.dev.json"
       }
     }
   },
