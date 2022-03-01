@@ -1,23 +1,12 @@
 const { awscdk } = require('projen');
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '1.73.0',
+  cdkVersion: '2.14.0',
   defaultReleaseBranch: 'main',
   name: '@wheatstalk/oidc-mock',
   authorName: 'Josh Kellendonk',
   authorEmail: 'joshkellendonk@gmail.com',
   repository: 'https://github.com/wheatstalk/oidc-mock.git',
-
-  cdkDependencies: [
-    '@aws-cdk/aws-apigateway',
-    '@aws-cdk/aws-lambda',
-    '@aws-cdk/aws-lambda-nodejs',
-    '@aws-cdk/aws-secretsmanager',
-    '@aws-cdk/aws-certificatemanager',
-    '@aws-cdk/aws-ssm',
-    '@aws-cdk/aws-route53',
-    '@aws-cdk/aws-route53-targets',
-  ],
 
   deps: [
     '@vendia/serverless-express@^4.3.4',
