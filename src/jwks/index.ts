@@ -1,5 +1,5 @@
 import { parseJwk, SignJWT } from './jose';
-import { JWK_PAIR } from './jwk-pair';
+import { JWKS } from './jwks.keys';
 
 export interface SignJwtRequest {
   readonly payload?: Record<string, any>;
@@ -9,22 +9,37 @@ export interface SignJwtRequest {
 }
 
 export class Jwks {
+  static findSigningKey() {
+    const find = JWKS.keys.find(jwk => jwk.use === 'sig');
+    if (!find) {
+      throw new Error('Could not find a key');
+    }
+
+    return find;
+  }
+
+  static getPublicJwks() {
+    return {
+      keys: JWKS.keys.filter(jwk => jwk.use === 'enc'),
+    };
+  }
+
   static async signJwt(options: SignJwtRequest) {
-    const privateKeyLike = await parseJwk(JWK_PAIR.privateJwk);
+    const privateJwk = this.findSigningKey();
+    const privateKeyLike = await parseJwk(privateJwk);
     const signJWT = new SignJWT(options.payload ?? {});
 
-    signJWT
+    return signJWT
       .setProtectedHeader({
-        alg: JWK_PAIR.privateJwk.alg,
-        kid: JWK_PAIR.privateJwk.kid,
+        alg: privateJwk.alg,
+        kid: privateJwk.kid,
       })
       .setIssuedAt()
       .setExpirationTime('2h')
       .setIssuer(options.issuer)
       .setSubject(options.subject)
       .setAudience(options.audience)
+      .sign(privateKeyLike)
     ;
-
-    return signJWT.sign(privateKeyLike);
   }
 }

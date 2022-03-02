@@ -2,12 +2,12 @@ import * as lambda from 'aws-lambda';
 import * as uuid from 'uuid';
 import { HttpUtil } from '../make-query-string';
 import { renderError } from './api';
-import { AuthResponseType, AuthStateDatabase } from './model';
+import { ResponseType, AuthStateDatabase } from './model';
 import { PkceChallengeMethod } from './pkce';
 import { Validator } from './validator';
 
 export interface AuthRequest {
-  readonly response_type: AuthResponseType;
+  readonly response_type: ResponseType;
   readonly client_id: string;
   readonly redirect_uri?: string;
   readonly state?: string;
@@ -19,7 +19,7 @@ export interface AuthRequest {
 const authRequestValidator = Validator.compile<AuthRequest>({
   type: 'object',
   properties: {
-    response_type: { enum: [AuthResponseType.CODE] },
+    response_type: { enum: [ResponseType.CODE] },
     client_id: { type: 'string' },
     redirect_uri: {
       type: 'string',
@@ -38,7 +38,7 @@ const authRequestValidator = Validator.compile<AuthRequest>({
 
 export async function authHandler(event: lambda.APIGatewayProxyEvent): Promise<lambda.APIGatewayProxyResult> {
   const authRequest = authRequestValidator.validate({
-    response_type: event.queryStringParameters?.response_type as AuthResponseType,
+    response_type: event.queryStringParameters?.response_type as ResponseType,
     client_id: event.queryStringParameters?.client_id as string,
     redirect_uri: event.queryStringParameters?.redirect_uri as string,
     state: event.queryStringParameters?.state,

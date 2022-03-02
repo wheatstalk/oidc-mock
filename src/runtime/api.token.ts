@@ -8,20 +8,20 @@ import { AuthState, AuthStateDatabase, TokenCollection } from './model';
 import { PkceUtil } from './pkce';
 import { Schema, Validator } from './validator';
 
-export enum TokenGrantType {
+export enum GrantType {
   AUTHORIZATION_CODE = 'authorization_code',
   CLIENT_CREDENTIALS = 'client_credentials',
   REFRESH_TOKEN = 'refresh_token',
   PASSWORD = 'password',
 }
 
-export interface RequestBase<T extends TokenGrantType> {
+export interface RequestBase<T extends GrantType> {
   readonly grant_type: T;
   readonly client_id: string;
   readonly client_secret: string;
 }
 
-export interface AuthorizationCodeRequest extends RequestBase<TokenGrantType.AUTHORIZATION_CODE> {
+export interface AuthorizationCodeRequest extends RequestBase<GrantType.AUTHORIZATION_CODE> {
   readonly code: string;
   readonly code_verifier?: string;
   readonly redirect_uri?: string;
@@ -31,7 +31,7 @@ export interface AuthorizationCodeRequest extends RequestBase<TokenGrantType.AUT
 const authorizationCodeRequestSchema: Schema = {
   type: 'object',
   properties: {
-    grant_type: { enum: [TokenGrantType.AUTHORIZATION_CODE] },
+    grant_type: { enum: [GrantType.AUTHORIZATION_CODE] },
     client_id: { type: 'string' },
     client_secret: { type: 'string' },
     code: { type: 'string' },
@@ -47,13 +47,13 @@ const authorizationCodeRequestSchema: Schema = {
   ],
 };
 
-export interface ClientCredentialsRequest extends RequestBase<TokenGrantType.CLIENT_CREDENTIALS> {
+export interface ClientCredentialsRequest extends RequestBase<GrantType.CLIENT_CREDENTIALS> {
 }
 
 const clientCredentialsRequestSchema: Schema = {
   type: 'object',
   properties: {
-    grant_type: { enum: [TokenGrantType.CLIENT_CREDENTIALS] },
+    grant_type: { enum: [GrantType.CLIENT_CREDENTIALS] },
     client_id: { type: 'string' },
     client_secret: { type: 'string' },
   },
@@ -64,14 +64,14 @@ const clientCredentialsRequestSchema: Schema = {
   ],
 };
 
-export interface RefreshTokenRequest extends RequestBase<TokenGrantType.REFRESH_TOKEN> {
+export interface RefreshTokenRequest extends RequestBase<GrantType.REFRESH_TOKEN> {
   readonly refresh_token: string;
 }
 
 const refreshTokenRequestSchema: Schema = {
   type: 'object',
   properties: {
-    grant_type: { enum: [TokenGrantType.REFRESH_TOKEN] },
+    grant_type: { enum: [GrantType.REFRESH_TOKEN] },
     client_id: { type: 'string' },
     client_secret: { type: 'string' },
     refresh_token: { type: 'string' },
@@ -84,7 +84,7 @@ const refreshTokenRequestSchema: Schema = {
   ],
 };
 
-export interface PasswordRequest extends RequestBase<TokenGrantType.PASSWORD> {
+export interface PasswordRequest extends RequestBase<GrantType.PASSWORD> {
   readonly username: string;
   readonly password: string;
 }
@@ -92,7 +92,7 @@ export interface PasswordRequest extends RequestBase<TokenGrantType.PASSWORD> {
 const passwordRequestSchema: Schema = {
   type: 'object',
   properties: {
-    grant_type: { enum: [TokenGrantType.REFRESH_TOKEN] },
+    grant_type: { enum: [GrantType.REFRESH_TOKEN] },
     client_id: { type: 'string' },
     client_secret: { type: 'string' },
     username: { type: 'string' },
@@ -146,9 +146,9 @@ export async function tokenHandler(event: lambda.APIGatewayProxyEvent): Promise<
   Logger.debug('tokenRequest', { tokenRequest });
 
   switch (tokenRequest.grant_type) {
-    case TokenGrantType.AUTHORIZATION_CODE:
+    case GrantType.AUTHORIZATION_CODE:
       return authorizationCodeHandler(tokenRequest);
-    case TokenGrantType.REFRESH_TOKEN:
+    case GrantType.REFRESH_TOKEN:
       return refreshTokenHandler(tokenRequest);
     default:
       throw new Error(`Unsupported grant type: ${tokenRequest.grant_type}`);

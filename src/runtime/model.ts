@@ -3,7 +3,7 @@ import { ENV_OIDC_MOCK_TABLE } from './constants';
 import { Logger } from './logger';
 import { Pkce } from './pkce';
 
-export enum AuthResponseType {
+export enum ResponseType {
   CODE = 'code',
 }
 
@@ -15,7 +15,7 @@ export interface TokenCollection {
 
 export interface AuthState extends TokenCollection {
   readonly code: string;
-  readonly responseType: AuthResponseType;
+  readonly responseType: ResponseType;
   readonly clientId: string;
   readonly redirectUri?: string;
   readonly state?: string;

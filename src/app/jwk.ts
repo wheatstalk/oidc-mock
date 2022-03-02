@@ -1,6 +1,6 @@
 
 /* eslint-disable */
-// Regenerate by running yarn ts-node src/gen-keypair.ts.
+// Regenerate by running yarn ts-node src/jwks.gen.ts.
 // I've put this in the code because this entire authorization server is a
 // sham by design and you shouldn't trust it one bit to begin with.
 export const JWK_PAIR = {

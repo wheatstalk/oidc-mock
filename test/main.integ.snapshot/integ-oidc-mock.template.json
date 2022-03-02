@@ -121,7 +121,7 @@
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Account"
       }
     },
-    "OidcMockApiRestApiDeployment213F754F26f96e39000badc284fa66035ff8ae09": {
+    "OidcMockApiRestApiDeployment213F754Ffbfbfb93649073c53f122d6ec278e907": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -130,13 +130,15 @@
         "Description": "Automatically created by the RestApi construct"
       },
       "DependsOn": [
-        "OidcMockApiRestApiwellknownjwksjsonGET5C8E1838",
         "OidcMockApiRestApiwellknownjwksjsonC23E861B",
+        "OidcMockApiRestApiwellknownopenidconfiguration71244140",
         "OidcMockApiRestApiwellknown966C364A",
         "OidcMockApiRestApiauthGET603757CE",
         "OidcMockApiRestApiauthE844D121",
         "OidcMockApiRestApitokenPOST31ABB0E9",
-        "OidcMockApiRestApitoken7121B8C0"
+        "OidcMockApiRestApitoken7121B8C0",
+        "OidcMockApiWellKnownJwksE50E2ECD",
+        "OidcMockApiWellKnownOpenIdConfiguration89DCE412"
       ],
       "Metadata": {
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Deployment/Resource"
@@ -149,7 +151,7 @@
           "Ref": "OidcMockApiRestApi70FF5D55"
         },
         "DeploymentId": {
-          "Ref": "OidcMockApiRestApiDeployment213F754F26f96e39000badc284fa66035ff8ae09"
+          "Ref": "OidcMockApiRestApiDeployment213F754Ffbfbfb93649073c53f122d6ec278e907"
         },
         "StageName": "prod"
       },
@@ -483,131 +485,19 @@
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/jwks.json/Resource"
       }
     },
-    "OidcMockApiRestApiwellknownjwksjsonGETApiPermissionintegoidcmockOidcMockApiRestApiE4997AFDGETwellknownjwksjson3F6990BB": {
-      "Type": "AWS::Lambda::Permission",
+    "OidcMockApiRestApiwellknownopenidconfiguration71244140": {
+      "Type": "AWS::ApiGateway::Resource",
       "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "OidcMockApiJwksHandlerF06257AA",
-            "Arn"
-          ]
+        "ParentId": {
+          "Ref": "OidcMockApiRestApiwellknown966C364A"
         },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
-              {
-                "Ref": "OidcMockApiRestApi70FF5D55"
-              },
-              "/",
-              {
-                "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
-              },
-              "/GET/.well-known/jwks.json"
-            ]
-          ]
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/jwks.json/GET/ApiPermission.integoidcmockOidcMockApiRestApiE4997AFD.GET...well-known.jwks.json"
-      }
-    },
-    "OidcMockApiRestApiwellknownjwksjsonGETApiPermissionTestintegoidcmockOidcMockApiRestApiE4997AFDGETwellknownjwksjsonA0B00A80": {
-      "Type": "AWS::Lambda::Permission",
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "OidcMockApiJwksHandlerF06257AA",
-            "Arn"
-          ]
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
-              {
-                "Ref": "OidcMockApiRestApi70FF5D55"
-              },
-              "/test-invoke-stage/GET/.well-known/jwks.json"
-            ]
-          ]
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/jwks.json/GET/ApiPermission.Test.integoidcmockOidcMockApiRestApiE4997AFD.GET...well-known.jwks.json"
-      }
-    },
-    "OidcMockApiRestApiwellknownjwksjsonGET5C8E1838": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "GET",
-        "ResourceId": {
-          "Ref": "OidcMockApiRestApiwellknownjwksjsonC23E861B"
-        },
+        "PathPart": "openid-configuration",
         "RestApiId": {
           "Ref": "OidcMockApiRestApi70FF5D55"
-        },
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "OidcMockApiJwksHandlerF06257AA",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
         }
       },
       "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/jwks.json/GET/Resource"
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/openid-configuration/Resource"
       }
     },
     "OidcMockApiAuthFunctionServiceRole0802E388": {
@@ -709,7 +599,7 @@
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
           },
-          "S3Key": "6d1f61684ec32dedb970cc7b3bbe2259dd9423c7c3e255cca2039903c0b2dc85.zip"
+          "S3Key": "fc537caa1bf590a7f04b9919c6023ec0e61d869fa115b6c1ce4c16fbbf913d82.zip"
         },
         "Role": {
           "Fn::GetAtt": [
@@ -836,7 +726,7 @@
           "S3Bucket": {
             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
           },
-          "S3Key": "6d1f61684ec32dedb970cc7b3bbe2259dd9423c7c3e255cca2039903c0b2dc85.zip"
+          "S3Key": "fc537caa1bf590a7f04b9919c6023ec0e61d869fa115b6c1ce4c16fbbf913d82.zip"
         },
         "Role": {
           "Fn::GetAtt": [
@@ -864,69 +754,76 @@
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/TokenFunction/Resource"
       }
     },
-    "OidcMockApiJwksHandlerServiceRole5830BFB4": {
-      "Type": "AWS::IAM::Role",
+    "OidcMockApiWellKnownJwksE50E2ECD": {
+      "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApiwellknownjwksjsonC23E861B"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationResponses": [
             {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com"
-              }
+              "ResponseTemplates": {
+                "application/json": "{\"keys\":[{\"alg\":\"RS256\",\"kid\":\"oidc-mock-RS256\",\"use\":\"enc\",\"kty\":\"RSA\",\"n\":\"tFAyApdkMQqsu_eS_7LQ93ZzJKuB9bokvrxYxHbGL_Jc_wNa4n3W7uOzd34gU5HmdpEmwtmh1mItT4ApIaDyNgZZm-ZZJNCT32CoGgciRCoVOpneoIspPau5rN5-y6mEblb31VjMq22Xh6F4IkCl4LGyOFcjQ7oQEl-xXOH0EPuF_nbYUWgzGetvNKCTZSmplLbTxmwOpL-KfJQn_3vbrcSkaC6skZty-_3dWRWgL0A7jAt7sH01XoPyoCWBo_xvsP_6clGqzPjsyw0641jTUv_l2RJIq_5qhjp-LXbJO2H0GP1ZYL0WEijvzopKX5J0I0A_5utP75y4U3A6TZUfcQ\",\"e\":\"AQAB\"}]}"
+              },
+              "StatusCode": "200"
             }
           ],
-          "Version": "2012-10-17"
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": "{\"statusCode\":200}"
+          },
+          "Type": "MOCK"
         },
-        "ManagedPolicyArns": [
+        "MethodResponses": [
           {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-              ]
-            ]
+            "StatusCode": "200"
           }
         ]
       },
       "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/JwksHandler/ServiceRole/Resource"
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/WellKnownJwks/Resource"
       }
     },
-    "OidcMockApiJwksHandlerF06257AA": {
-      "Type": "AWS::Lambda::Function",
+    "OidcMockApiWellKnownOpenIdConfiguration89DCE412": {
+      "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApiwellknownopenidconfiguration71244140"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "#set ($baseUrl = 'https://' + $context.domainName)\n#if ($context.domainPrefix == $context.apiId)\n#set ($baseUrl = 'https://' + $context.domainName + '/' + $context.stage)\n#end\n{\"issuer\":\"oidc-mock\",\"authorization_endpoint\":\"$baseUrl/auth\",\"token_endpoint\":\"$baseUrl/token\",\"jwks_uri\":\"$baseUrl/.well-known/jwks.json\",\"userinfo_endpoint\":\"$baseUrl/userinfo\",\"scopes_supported\":[\"openid\",\"oidc-mock:auth_state\",\"offline_access\"],\"response_types_supported\":[\"code\"],\"response_modes_supported\":[\"query\"],\"grant_types_supported\":[\"authorization_code\",\"refresh_token\"],\"id_token_signing_alg_values_supported\":[\"RS256\"]}"
+              },
+              "StatusCode": "200"
+            }
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": "{\"statusCode\":200}"
           },
-          "S3Key": "6d1f61684ec32dedb970cc7b3bbe2259dd9423c7c3e255cca2039903c0b2dc85.zip"
+          "Type": "MOCK"
         },
-        "Role": {
-          "Fn::GetAtt": [
-            "OidcMockApiJwksHandlerServiceRole5830BFB4",
-            "Arn"
-          ]
-        },
-        "Environment": {
-          "Variables": {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "NODE_OPTIONS": "--enable-source-maps"
+        "MethodResponses": [
+          {
+            "StatusCode": "200"
           }
-        },
-        "Handler": "index.jwksHandler",
-        "Runtime": "nodejs14.x"
+        ]
       },
-      "DependsOn": [
-        "OidcMockApiJwksHandlerServiceRole5830BFB4"
-      ],
       "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/JwksHandler/Resource"
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/WellKnownOpenIdConfiguration/Resource"
       }
     },
     "testAuthorizationCodeSimpleHandlerServiceRole6CC9C456": {

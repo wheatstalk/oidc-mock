@@ -3,8 +3,8 @@ import expect from 'expect';
 import got, * as got_ from 'got';
 import * as uuid from 'uuid';
 import { HttpUtil } from '../src/make-query-string';
-import { TokenGrantType, TokenScope } from '../src/runtime/api.token';
-import { AuthResponseType } from '../src/runtime/model';
+import { GrantType, TokenScope } from '../src/runtime/api.token';
+import { ResponseType } from '../src/runtime/model';
 import { PkceChallengeMethod, PkceUtil } from '../src/runtime/pkce';
 
 // Integration test list.
@@ -23,7 +23,7 @@ export async function testAuthorizationCodeSimple() {
   // GIVEN
   const clientId = uuid.v4();
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
-    response_type: AuthResponseType.CODE,
+    response_type: ResponseType.CODE,
     client_id: clientId,
   });
 
@@ -42,7 +42,7 @@ export async function testAuthorizationCodeWithState() {
   // GIVEN
   const clientId = uuid.v4();
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
-    response_type: AuthResponseType.CODE,
+    response_type: ResponseType.CODE,
     client_id: clientId,
     state: 'foo-bar',
   });
@@ -63,7 +63,7 @@ export async function testAuthorizationCodeTokenWithPKCES256() {
   const codeVerifier = uuid.v4();
   const state = 'foo-bar';
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
-    response_type: AuthResponseType.CODE,
+    response_type: ResponseType.CODE,
     client_id: clientId,
     state: state,
     code_challenge: PkceUtil.generateS256CodeChallenge(codeVerifier),
@@ -75,7 +75,7 @@ export async function testAuthorizationCodeTokenWithPKCES256() {
   // WHEN
   const tokenRes: any = await got.post(TOKEN_URL, {
     form: {
-      grant_type: TokenGrantType.AUTHORIZATION_CODE,
+      grant_type: GrantType.AUTHORIZATION_CODE,
       client_id: clientId,
       client_secret: clientSecret,
       state: state,
@@ -100,7 +100,7 @@ export async function testRefreshToken() {
   const state = 'foo-bar';
   const scope = TokenScope.OFFLINE_ACCESS;
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
-    response_type: AuthResponseType.CODE,
+    response_type: ResponseType.CODE,
     client_id: clientId,
     state: state,
     scope: scope,
@@ -111,7 +111,7 @@ export async function testRefreshToken() {
   const authRes: any = await got(authUrl, { followRedirect: false }).json();
   const tokenRes: any = await got.post(TOKEN_URL, {
     form: {
-      grant_type: TokenGrantType.AUTHORIZATION_CODE,
+      grant_type: GrantType.AUTHORIZATION_CODE,
       client_id: clientId,
       client_secret: clientSecret,
       state: state,
@@ -126,7 +126,7 @@ export async function testRefreshToken() {
   // WHEN
   const refreshTokenRes1: any = await got.post(TOKEN_URL, {
     form: {
-      grant_type: TokenGrantType.REFRESH_TOKEN,
+      grant_type: GrantType.REFRESH_TOKEN,
       client_id: clientId,
       client_secret: clientSecret,
       refresh_token: tokenRes.refresh_token,
@@ -139,7 +139,7 @@ export async function testRefreshToken() {
 
   const refreshTokenRes2: any = await got.post(TOKEN_URL, {
     form: {
-      grant_type: TokenGrantType.REFRESH_TOKEN,
+      grant_type: GrantType.REFRESH_TOKEN,
       client_id: clientId,
       client_secret: clientSecret,
       refresh_token: refreshTokenRes1.refresh_token,
@@ -161,7 +161,7 @@ export async function testIdToken() {
   const state = 'foo-bar';
   const scope = [TokenScope.OPENID, TokenScope.OIDC_MOCK_AUTH_STATE].join(' ');
   const authUrl = HttpUtil.makeUrl(AUTH_URL, {
-    response_type: AuthResponseType.CODE,
+    response_type: ResponseType.CODE,
     client_id: clientId,
     state: state,
     scope: scope,
@@ -174,7 +174,7 @@ export async function testIdToken() {
   // WHEN
   const tokenRes: any = await got.post(TOKEN_URL, {
     form: {
-      grant_type: TokenGrantType.AUTHORIZATION_CODE,
+      grant_type: GrantType.AUTHORIZATION_CODE,
       client_id: clientId,
       client_secret: clientSecret,
       state: state,

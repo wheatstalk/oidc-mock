@@ -16,7 +16,9 @@ export class RestApiResourceTool {
   }
 
   lambda(route: string, method: string, options: { readonly lambda: aws_lambda.IFunction } & aws_apigateway.MethodOptions) {
-    this.route(route).addMethod(method, new aws_apigateway.LambdaIntegration(options.lambda), options);
+    const resource = this.route(route);
+    resource.addMethod(method, new aws_apigateway.LambdaIntegration(options.lambda), options);
+    return resource;
   }
 
   private createRoute(route: string) {
