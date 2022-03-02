@@ -4,8 +4,7 @@ import { PkceChallengeMethod, ResponseType } from '../oidc-types';
 import { authRequestValidator } from './api.schema';
 import { AuthStateData } from './auth-state';
 import { Logger } from './logger';
-import { AuthService } from './services/auth-service';
-import { TokenService } from './services/token-service';
+import { AuthService, TokenService } from './services';
 import { ValidationError } from './validator';
 
 export const authHandler = handler(auth);
