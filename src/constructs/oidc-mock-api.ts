@@ -7,19 +7,41 @@ import { RestApiResourceTool } from './rest-api-resource-tool';
 import { RuntimeFunction } from './runtime-function';
 import { VtlMethod } from './vtl-method';
 
-export interface OidcMockApiProps {
-  readonly table: OidcMockTable;
-}
-
+/**
+ * Creates a mock OIDC Identity Provider
+ */
 export class OidcMockApi extends Construct {
+  /**
+   * The REST API
+   */
   public readonly restApi: aws_apigateway.RestApi;
 
-  constructor(scope: Construct, id: string, props: OidcMockApiProps) {
+  /**
+   * The full URL to access the openid-configuration endpoint.
+   */
+  public readonly openidConfigurationUrl: string;
+
+  /**
+   * The URL for the auth endpoint.
+   */
+  public readonly authUrl: string;
+
+  /**
+   * The URL for the token endpoint.
+   */
+  public readonly tokenUrl: string;
+
+  /**
+   * The URL for the jwks endpoint.
+   */
+  public readonly jwksUrl: string;
+
+  constructor(scope: Construct, id: string) {
     super(scope, id);
 
     const restApi = new aws_apigateway.RestApi(this, 'RestApi');
     const resourceTool = new RestApiResourceTool(restApi.root);
-    const table = props.table;
+    const table = new OidcMockTable(this, 'Table');
 
     const authPath = 'auth';
     const tokenPath = 'token';
@@ -88,6 +110,11 @@ export class OidcMockApi extends Construct {
     });
 
     this.restApi = restApi;
+
+    this.authUrl = restApi.deploymentStage.urlForPath(`/${authPath}`);
+    this.tokenUrl = restApi.deploymentStage.urlForPath(`/${tokenPath}`);
+    this.jwksUrl = restApi.deploymentStage.urlForPath(`/${jwksPath}`);
+    this.openidConfigurationUrl = restApi.deploymentStage.urlForPath(`/${openidConfigurationPath}`);
   }
 }
 

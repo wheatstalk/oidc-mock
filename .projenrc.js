@@ -1,12 +1,15 @@
-const { awscdk } = require('projen');
+const { awscdk, javascript } = require('projen');
 
 const project = new awscdk.AwsCdkConstructLibrary({
-  cdkVersion: '2.13.0',
+  cdkVersion: '2.1.0',
   defaultReleaseBranch: 'main',
   name: '@wheatstalk/oidc-mock',
   authorName: 'Josh Kellendonk',
   authorEmail: 'joshkellendonk@gmail.com',
   repository: 'https://github.com/wheatstalk/oidc-mock.git',
+
+  npmAccess: javascript.NpmAccess.PUBLIC,
+  releaseToNpm: true,
 
   devDeps: [
     'uuid@8',
@@ -65,13 +68,8 @@ project.bundler.addBundle('src/runtime/api.lambda.ts', {
 project.addGitIgnore('/.idea');
 project.addGitIgnore('/cdk.context.json');
 
-const cdkExec = 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out';
 project.addTask('integ:main:test', {
-  exec: `${cdkExec} -at integ`,
-});
-
-project.addTask('integ:main:test:refresh-token', {
-  exec: `${cdkExec} -at integ=testRefreshTokenHandler`,
+  exec: 'cdk-exec --app test/.tmp/main.integ/deploy.cdk.out -at integ',
 });
 
 project.upgradeWorkflow.postUpgradeTask.spawn(

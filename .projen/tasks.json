@@ -218,14 +218,6 @@
         }
       ]
     },
-    "integ:main:test:refresh-token": {
-      "name": "integ:main:test:refresh-token",
-      "steps": [
-        {
-          "exec": "cdk-exec --app test/.tmp/main.integ/deploy.cdk.out -at integ=testRefreshTokenHandler"
-        }
-      ]
-    },
     "integ:main:watch": {
       "name": "integ:main:watch",
       "description": "watch integration test 'main' (without updating snapshots)",

@@ -1,37 +1,48 @@
 # OIDC Mock
 
-Want to test OIDC authorization code flow during local development, but don't
-want to spin up a local Keycloak, set up an Auth0, or Cognito IdP? Then this
-prototype OIDC mock service is for you.
+A CDK construct that sets up an OIDC Identity Provider REST API for integration testing.
 
-Features:
+## Features
+* Passwordless Authorization Code Flow
+* Unrestricted `redirect_uri`
+* Convention-based `client_id` / `client_secret`
+* PKCE verification for `S256` and `plain`
+* Authorization code grant
+* Client credentials grant
+* Username grant
+* Refresh token grant
 
-* Publicly hosted
-* Open for anyone to use
-* Supports authorization code flow
-* No login screen
-* No restrictions on redirect uri, so use localhost or whatever you want
-* Does not authenticate client credentials, so you can commit dummy credentials if you use this in an integration test.
+## Scopes
+
+| Scope            | Description                   |
+|------------------|-------------------------------|
+| `openid`         | Enable OIDC and provide a JWT |
+| `offline_access` | Enable provide refresh tokens |
+
+## Usage
+
+```ts
+import { App, Stack, CfnOutput } from 'aws-cdk-lib';
+import { OidcMockApi, OidcMockTable } from '@wheatstalk/oidc-mock';
+
+const app = new App();
+const stack = new Stack(app, 'integ-oidc-mock');
+
+const mockApi = new OidcMockApi(stack, 'OidcMockApi');
+
+new CfnOutput(stack, 'OidcMockApiUrl', {
+  value: mockApi.openidConfigurationUrl,
+});
+
+app.synth();
+```
 
 ## Mock endpoint addresses
 
-| Description             | Link                                                             |
-|-------------------------|------------------------------------------------------------------|
-| OIDC Discovery Endpoint | https://oidc-mock.wheatstalk.ca/.well-known/openid-configuration |
-| JWKS endpoint           | https://oidc-mock.wheatstalk.ca/.well-known/jwks.json            |
-| Authorize Endpoint      | https://oidc-mock.wheatstalk.ca/auth                             |
-| Token Endpoint          | https://oidc-mock.wheatstalk.ca/token                            |
-
-## Want to play with it?
-
-Auth0's OpenID Connect works with this endpoint.
-
-* Visit https://openidconnect.net
-* Under configuration, enter the mock's OIDC Discovery Endpoint (above)
-* Click "Use Discovery Document"
-* Save and start following their wizard
-
-## Code
-
-Please excuse the mess that is this code. This is an early protoype, but the
-code quality will improve with time.
+| Path                                | Description                                      |
+|-------------------------------------|--------------------------------------------------|
+| `/auth`                             | Authorization endpoint                           |
+| `/token`                            | Token endpoint                                   |
+| `/userinfo`                         | User info endpoint (planned)                     |
+| `/.well-known/openid-configuration` | OpenID auto-configuration endpoint               |
+| `/.well-known/jwks.json`            | JWKS endpoint (crypto signature keyset for JWTs) |

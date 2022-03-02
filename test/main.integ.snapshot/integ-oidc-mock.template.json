@@ -1,66 +1,5 @@
 {
   "Resources": {
-    "TableCD117FA1": {
-      "Type": "AWS::DynamoDB::Table",
-      "Properties": {
-        "KeySchema": [
-          {
-            "AttributeName": "PK",
-            "KeyType": "HASH"
-          },
-          {
-            "AttributeName": "SK",
-            "KeyType": "RANGE"
-          }
-        ],
-        "AttributeDefinitions": [
-          {
-            "AttributeName": "PK",
-            "AttributeType": "S"
-          },
-          {
-            "AttributeName": "SK",
-            "AttributeType": "S"
-          },
-          {
-            "AttributeName": "GSI1PK",
-            "AttributeType": "S"
-          },
-          {
-            "AttributeName": "GSI1SK",
-            "AttributeType": "S"
-          }
-        ],
-        "BillingMode": "PAY_PER_REQUEST",
-        "GlobalSecondaryIndexes": [
-          {
-            "IndexName": "GSI1",
-            "KeySchema": [
-              {
-                "AttributeName": "GSI1PK",
-                "KeyType": "HASH"
-              },
-              {
-                "AttributeName": "GSI1SK",
-                "KeyType": "RANGE"
-              }
-            ],
-            "Projection": {
-              "ProjectionType": "ALL"
-            }
-          }
-        ],
-        "TimeToLiveSpecification": {
-          "AttributeName": "TTL",
-          "Enabled": true
-        }
-      },
-      "UpdateReplacePolicy": "Delete",
-      "DeletionPolicy": "Delete",
-      "Metadata": {
-        "aws:cdk:path": "integ-oidc-mock/Table/Resource"
-      }
-    },
     "OidcMockApiRestApi70FF5D55": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
@@ -155,9 +94,6 @@
         },
         "StageName": "prod"
       },
-      "DependsOn": [
-        "OidcMockApiRestApiAccount1AB99507"
-      ],
       "Metadata": {
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/DeploymentStage.prod/Resource"
       }
@@ -500,6 +436,67 @@
         "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/openid-configuration/Resource"
       }
     },
+    "OidcMockApiTableCB8CB232": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "SK",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1SK",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "GSI1",
+            "KeySchema": [
+              {
+                "AttributeName": "GSI1PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "GSI1SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          }
+        ],
+        "TimeToLiveSpecification": {
+          "AttributeName": "TTL",
+          "Enabled": true
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/Table/Resource"
+      }
+    },
     "OidcMockApiAuthFunctionServiceRole0802E388": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -557,7 +554,7 @@
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TableCD117FA1",
+                    "OidcMockApiTableCB8CB232",
                     "Arn"
                   ]
                 },
@@ -567,7 +564,7 @@
                     [
                       {
                         "Fn::GetAtt": [
-                          "TableCD117FA1",
+                          "OidcMockApiTableCB8CB232",
                           "Arn"
                         ]
                       },
@@ -611,7 +608,7 @@
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "NODE_OPTIONS": "--enable-source-maps",
             "OIDC_MOCK_TABLE": {
-              "Ref": "TableCD117FA1"
+              "Ref": "OidcMockApiTableCB8CB232"
             }
           }
         },
@@ -683,7 +680,7 @@
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TableCD117FA1",
+                    "OidcMockApiTableCB8CB232",
                     "Arn"
                   ]
                 },
@@ -693,7 +690,7 @@
                     [
                       {
                         "Fn::GetAtt": [
-                          "TableCD117FA1",
+                          "OidcMockApiTableCB8CB232",
                           "Arn"
                         ]
                       },
@@ -737,7 +734,7 @@
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "NODE_OPTIONS": "--enable-source-maps",
             "OIDC_MOCK_TABLE": {
-              "Ref": "TableCD117FA1"
+              "Ref": "OidcMockApiTableCB8CB232"
             }
           }
         },
@@ -1460,6 +1457,32 @@
               "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
             },
             "/"
+          ]
+        ]
+      }
+    },
+    "OidcMockApiUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "OidcMockApiRestApi70FF5D55"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+            },
+            "/.well-known/openid-configuration"
           ]
         ]
       }

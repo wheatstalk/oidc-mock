@@ -1,15 +1,16 @@
 import * as path from 'path';
-import { App, Duration, Stack, Tags } from 'aws-cdk-lib';
+import { App, CfnOutput, Duration, Stack, Tags } from 'aws-cdk-lib';
 import * as aws_lambda_nodejs from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
-import { OidcMockApi, OidcMockTable } from '../src/constructs';
+import { OidcMockApi } from '../src';
 
 const app = new App();
 const stack = new Stack(app, 'integ-oidc-mock');
 
-const table = new OidcMockTable(stack, 'Table');
-const mockApi = new OidcMockApi(stack, 'OidcMockApi', {
-  table,
+const mockApi = new OidcMockApi(stack, 'OidcMockApi');
+
+new CfnOutput(stack, 'OidcMockApiUrl', {
+  value: mockApi.openidConfigurationUrl,
 });
 
 class IntegTest extends aws_lambda_nodejs.NodejsFunction {
