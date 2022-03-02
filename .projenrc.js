@@ -1,6 +1,6 @@
 const { awscdk } = require('projen');
 
-const project = new awscdk.AwsCdkTypeScriptApp({
+const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.13.0',
   defaultReleaseBranch: 'main',
   name: '@wheatstalk/oidc-mock',
@@ -8,13 +8,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   authorEmail: 'joshkellendonk@gmail.com',
   repository: 'https://github.com/wheatstalk/oidc-mock.git',
 
-  deps: [
-    '@vendia/serverless-express@^4.3.4',
-    'express@^4.17.1',
-    'uuid@8',
-  ],
-
   devDeps: [
+    'uuid@8',
     '@types/aws-lambda@^8.10.72',
     '@types/aws-serverless-express@^3.3.0',
     'nodemon@^2.0.7',
@@ -54,8 +49,12 @@ new awscdk.IntegrationTestAutoDiscover(project, {
   },
 });
 
+const packageJson = project.tryFindObjectFile('package.json');
+
+packageJson.addOverride('jsii.excludeTypescript', ['src/runtime/**', 'src/jwks/jose.ts']);
 project.eslint.allowDevDeps('src/runtime/**');
 project.eslint.allowDevDeps('src/jwks/**');
+
 project.bundler.addBundle('src/runtime/api.lambda.ts', {
   platform: 'node',
   target: 'node14',
@@ -74,5 +73,9 @@ project.addTask('integ:main:test', {
 project.addTask('integ:main:test:refresh-token', {
   exec: `${cdkExec} -at integ=testRefreshTokenHandler`,
 });
+
+project.upgradeWorkflow.postUpgradeTask.spawn(
+  project.tasks.tryFind('integ:snapshot-all'),
+);
 
 project.synth();
