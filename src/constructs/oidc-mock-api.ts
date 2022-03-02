@@ -1,12 +1,11 @@
 import { aws_apigateway } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Jwks } from '../jwks';
-import { TokenScope } from '../runtime';
-import { GrantType } from '../runtime/api.token';
-import { ResponseType } from '../runtime/model';
+import { GrantType, ResponseType, TokenScope } from '../oidc-types';
 import { OidcMockTable } from './oidc-mock-table';
 import { RestApiResourceTool } from './rest-api-resource-tool';
 import { RuntimeFunction } from './runtime-function';
+import { VtlMethod } from './vtl-method';
 
 export interface OidcMockApiProps {
   readonly table: OidcMockTable;
@@ -44,14 +43,14 @@ export class OidcMockApi extends Construct {
 
     const publicJwks = Jwks.getPublicJwks();
 
-    new PureVtlMethod(this, 'WellKnownJwks', {
+    new VtlMethod(this, 'WellKnownJwks', {
       resource: resourceTool.route(jwksPath),
       vtl: [
         JSON.stringify(publicJwks),
       ],
     });
 
-    new PureVtlMethod(this, 'WellKnownOpenIdConfiguration', {
+    new VtlMethod(this, 'WellKnownOpenIdConfiguration', {
       resource: resourceTool.route(openidConfigurationPath),
       vtl: [
         // Determine the base URL whether we're on execute-api or a plain domain name.
@@ -92,33 +91,3 @@ export class OidcMockApi extends Construct {
   }
 }
 
-interface PureVtlMethodProps {
-  readonly resource: aws_apigateway.IResource;
-  readonly vtl: string | string[];
-}
-
-class PureVtlMethod extends aws_apigateway.Method {
-  constructor(scope: Construct, id: string, props: PureVtlMethodProps) {
-    const vtl = Array.isArray(props.vtl) ? props.vtl.join('\n') : props.vtl;
-
-    super(scope, id, {
-      resource: props.resource,
-      httpMethod: 'GET',
-      integration: new aws_apigateway.MockIntegration({
-        passthroughBehavior: aws_apigateway.PassthroughBehavior.NEVER,
-        requestTemplates: {
-          'application/json': JSON.stringify({ statusCode: 200 }),
-        },
-        integrationResponses: [{
-          statusCode: '200',
-          responseTemplates: {
-            'application/json': vtl,
-          },
-        }],
-      }),
-      options: {
-        methodResponses: [{ statusCode: '200' }],
-      },
-    });
-  }
-}

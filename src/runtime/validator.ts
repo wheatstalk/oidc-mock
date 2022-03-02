@@ -1,6 +1,5 @@
 import Ajv, * as Ajv_ from 'ajv';
 import addFormats from 'ajv-formats';
-import { APIHandler } from './api';
 
 const ajv = new Ajv();
 addFormats(ajv);
@@ -13,11 +12,6 @@ export class Validator<T> {
       ajv.compile(schema),
     );
   }
-
-  static errorHandler(cb: APIHandler): APIHandler {
-    return errorHandler(cb);
-  }
-
   constructor(private readonly fn: ValidateFunction) {}
 
   validate(input: T): T {
@@ -27,24 +21,19 @@ export class Validator<T> {
 
     return input;
   }
-}
 
-export function errorHandler(cb: APIHandler): APIHandler {
-  return async event => {
-    try {
-      return await cb(event);
-    } catch (e) {
-      if (e instanceof ValidationError) {
-        return {
-          statusCode: 400,
-          body: JSON.stringify({
-            error: e.message,
-          }),
-        };
-      }
-      throw e;
-    }
-  };
+  decorate<U>() {
+    const validator = this;
+    return (_target: any, _propertyName: string, descriptor: TypedPropertyDescriptor<(x: T) => U>) => {
+      const method = descriptor.value!;
+
+      descriptor.value = (arg: T): U => {
+        return method.call(this, validator.validate(arg));
+      };
+
+      return descriptor;
+    };
+  }
 }
 
 export type ValidateFunction = Ajv_.ValidateFunction;

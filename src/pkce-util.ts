@@ -1,9 +1,5 @@
 import * as crypto from 'crypto';
-
-export enum PkceChallengeMethod {
-  PLAIN = 'PLAIN',
-  S256 = 'S256',
-}
+import { PkceChallengeMethod } from './oidc-types';
 
 export interface Pkce {
   readonly codeChallenge: string;

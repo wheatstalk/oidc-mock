@@ -1,2 +1,1 @@
-export * from './constants';
-export { TokenScope } from './api.token';
+export * from '../constants';

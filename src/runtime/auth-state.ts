@@ -1,11 +1,8 @@
 import AWS from 'aws-sdk';
-import { ENV_OIDC_MOCK_TABLE } from './constants';
+import { ENV_OIDC_MOCK_TABLE } from '../constants';
+import { ResponseType } from '../oidc-types';
+import { Pkce } from '../pkce-util';
 import { Logger } from './logger';
-import { Pkce } from './pkce';
-
-export enum ResponseType {
-  CODE = 'code',
-}
 
 export interface TokenCollection {
   readonly idToken?: string;
@@ -27,9 +24,9 @@ export interface AuthStateDatabaseOptions {
   readonly tableName: string;
 }
 
-export class AuthStateDatabase {
+export class AuthStateData {
   static get() {
-    return new AuthStateDatabase({
+    return new AuthStateData({
       tableName: process.env[ENV_OIDC_MOCK_TABLE]!,
     });
   }

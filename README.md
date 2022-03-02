@@ -1,4 +1,4 @@
-# Wheatstalk's prototype OIDC mock service
+# OIDC Mock
 
 Want to test OIDC authorization code flow during local development, but don't
 want to spin up a local Keycloak, set up an Auth0, or Cognito IdP? Then this
@@ -15,12 +15,12 @@ Features:
 
 ## Mock endpoint addresses
 
-| Description | Link |
-| ----------- | ---- |
-| OIDC Discovery Endpoint | https://oidc-mock.wheatstalk.ca/.well-known/openid-configuration
-| JWKS endpoint | https://oidc-mock.wheatstalk.ca/.well-known/jwks.json
-| Authorize Endpoint | https://oidc-mock.wheatstalk.ca/auth
-| Token Endpoint | https://oidc-mock.wheatstalk.ca/token
+| Description             | Link                                                             |
+|-------------------------|------------------------------------------------------------------|
+| OIDC Discovery Endpoint | https://oidc-mock.wheatstalk.ca/.well-known/openid-configuration |
+| JWKS endpoint           | https://oidc-mock.wheatstalk.ca/.well-known/jwks.json            |
+| Authorize Endpoint      | https://oidc-mock.wheatstalk.ca/auth                             |
+| Token Endpoint          | https://oidc-mock.wheatstalk.ca/token                            |
 
 ## Want to play with it?
 

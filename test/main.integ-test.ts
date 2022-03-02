@@ -2,10 +2,9 @@ import 'source-map-support/register';
 import expect from 'expect';
 import got, * as got_ from 'got';
 import * as uuid from 'uuid';
-import { HttpUtil } from '../src/make-query-string';
-import { GrantType, TokenScope } from '../src/runtime/api.token';
-import { ResponseType } from '../src/runtime/model';
-import { PkceChallengeMethod, PkceUtil } from '../src/runtime/pkce';
+import { HttpUtil } from '../src/http-util';
+import { GrantType, PkceChallengeMethod, ResponseType, TokenScope } from '../src/oidc-types';
+import { PkceUtil } from '../src/pkce-util';
 
 // Integration test list.
 export const testAuthorizationCodeSimpleHandler = testHandler(testAuthorizationCodeSimple);

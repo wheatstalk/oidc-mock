@@ -1,7 +1,8 @@
 import winston from 'winston';
+import { ENV_OIDC_MOCK_LOG_LEVEL } from '../constants';
 
 const logger = winston.createLogger({
-  level: 'debug',
+  level: process.env[ENV_OIDC_MOCK_LOG_LEVEL] ?? 'info',
   transports: [
     new winston.transports.Console(),
   ],
