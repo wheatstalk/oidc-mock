@@ -1,0 +1,1525 @@
+{
+  "Resources": {
+    "OidcMockApiRestApi70FF5D55": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "RestApi"
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Resource"
+      }
+    },
+    "OidcMockApiRestApiCloudWatchRole65FAF50C": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/CloudWatchRole/Resource"
+      }
+    },
+    "OidcMockApiRestApiAccount1AB99507": {
+      "Type": "AWS::ApiGateway::Account",
+      "Properties": {
+        "CloudWatchRoleArn": {
+          "Fn::GetAtt": [
+            "OidcMockApiRestApiCloudWatchRole65FAF50C",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "OidcMockApiRestApi70FF5D55"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Account"
+      }
+    },
+    "OidcMockApiRestApiDeployment213F754Ffbfbfb93649073c53f122d6ec278e907": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "Description": "Automatically created by the RestApi construct"
+      },
+      "DependsOn": [
+        "OidcMockApiRestApiwellknownjwksjsonC23E861B",
+        "OidcMockApiRestApiwellknownopenidconfiguration71244140",
+        "OidcMockApiRestApiwellknown966C364A",
+        "OidcMockApiRestApiauthGET603757CE",
+        "OidcMockApiRestApiauthE844D121",
+        "OidcMockApiRestApitokenPOST31ABB0E9",
+        "OidcMockApiRestApitoken7121B8C0",
+        "OidcMockApiWellKnownJwksE50E2ECD",
+        "OidcMockApiWellKnownOpenIdConfiguration89DCE412"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Deployment/Resource"
+      }
+    },
+    "OidcMockApiRestApiDeploymentStageprod282E2A8D": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "DeploymentId": {
+          "Ref": "OidcMockApiRestApiDeployment213F754Ffbfbfb93649073c53f122d6ec278e907"
+        },
+        "StageName": "prod"
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/DeploymentStage.prod/Resource"
+      }
+    },
+    "OidcMockApiRestApiauthE844D121": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "OidcMockApiRestApi70FF5D55",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "auth",
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/auth/Resource"
+      }
+    },
+    "OidcMockApiRestApiauthGETApiPermissionintegoidcmockOidcMockApiRestApiE4997AFDGETauthA779D397": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "OidcMockApiAuthFunctionE0AA1451",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "OidcMockApiRestApi70FF5D55"
+              },
+              "/",
+              {
+                "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+              },
+              "/GET/auth"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/auth/GET/ApiPermission.integoidcmockOidcMockApiRestApiE4997AFD.GET..auth"
+      }
+    },
+    "OidcMockApiRestApiauthGETApiPermissionTestintegoidcmockOidcMockApiRestApiE4997AFDGETauth6BC455B4": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "OidcMockApiAuthFunctionE0AA1451",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "OidcMockApiRestApi70FF5D55"
+              },
+              "/test-invoke-stage/GET/auth"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/auth/GET/ApiPermission.Test.integoidcmockOidcMockApiRestApiE4997AFD.GET..auth"
+      }
+    },
+    "OidcMockApiRestApiauthGET603757CE": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApiauthE844D121"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "OidcMockApiAuthFunctionE0AA1451",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/auth/GET/Resource"
+      }
+    },
+    "OidcMockApiRestApitoken7121B8C0": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "OidcMockApiRestApi70FF5D55",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "token",
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/token/Resource"
+      }
+    },
+    "OidcMockApiRestApitokenPOSTApiPermissionintegoidcmockOidcMockApiRestApiE4997AFDPOSTtoken7F1D1611": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "OidcMockApiTokenFunctionE4C417E1",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "OidcMockApiRestApi70FF5D55"
+              },
+              "/",
+              {
+                "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+              },
+              "/POST/token"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/token/POST/ApiPermission.integoidcmockOidcMockApiRestApiE4997AFD.POST..token"
+      }
+    },
+    "OidcMockApiRestApitokenPOSTApiPermissionTestintegoidcmockOidcMockApiRestApiE4997AFDPOSTtokenF34DA507": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "OidcMockApiTokenFunctionE4C417E1",
+            "Arn"
+          ]
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "OidcMockApiRestApi70FF5D55"
+              },
+              "/test-invoke-stage/POST/token"
+            ]
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/token/POST/ApiPermission.Test.integoidcmockOidcMockApiRestApiE4997AFD.POST..token"
+      }
+    },
+    "OidcMockApiRestApitokenPOST31ABB0E9": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApitoken7121B8C0"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "OidcMockApiTokenFunctionE4C417E1",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/token/POST/Resource"
+      }
+    },
+    "OidcMockApiRestApiwellknown966C364A": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Fn::GetAtt": [
+            "OidcMockApiRestApi70FF5D55",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": ".well-known",
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/Resource"
+      }
+    },
+    "OidcMockApiRestApiwellknownjwksjsonC23E861B": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "OidcMockApiRestApiwellknown966C364A"
+        },
+        "PathPart": "jwks.json",
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/jwks.json/Resource"
+      }
+    },
+    "OidcMockApiRestApiwellknownopenidconfiguration71244140": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "OidcMockApiRestApiwellknown966C364A"
+        },
+        "PathPart": "openid-configuration",
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/RestApi/Default/.well-known/openid-configuration/Resource"
+      }
+    },
+    "OidcMockApiTableCB8CB232": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "KeySchema": [
+          {
+            "AttributeName": "PK",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "SK",
+            "KeyType": "RANGE"
+          }
+        ],
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "SK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1PK",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "GSI1SK",
+            "AttributeType": "S"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST",
+        "GlobalSecondaryIndexes": [
+          {
+            "IndexName": "GSI1",
+            "KeySchema": [
+              {
+                "AttributeName": "GSI1PK",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "GSI1SK",
+                "KeyType": "RANGE"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          }
+        ],
+        "TimeToLiveSpecification": {
+          "AttributeName": "TTL",
+          "Enabled": true
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/Table/Resource"
+      }
+    },
+    "OidcMockApiAuthFunctionServiceRole0802E388": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/AuthFunction/ServiceRole/Resource"
+      }
+    },
+    "OidcMockApiAuthFunctionServiceRoleDefaultPolicy37FCFB74": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "OidcMockApiTableCB8CB232",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "OidcMockApiTableCB8CB232",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "OidcMockApiAuthFunctionServiceRoleDefaultPolicy37FCFB74",
+        "Roles": [
+          {
+            "Ref": "OidcMockApiAuthFunctionServiceRole0802E388"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/AuthFunction/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "OidcMockApiAuthFunctionE0AA1451": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "5117b02fb3e956b434dbc95bbf07c5cb4c6cb8730dea5d9ef456e0fb7b7f7ca3.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "OidcMockApiAuthFunctionServiceRole0802E388",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPTIONS": "--enable-source-maps",
+            "OIDC_MOCK_TABLE": {
+              "Ref": "OidcMockApiTableCB8CB232"
+            }
+          }
+        },
+        "Handler": "index.authHandler",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "OidcMockApiAuthFunctionServiceRoleDefaultPolicy37FCFB74",
+        "OidcMockApiAuthFunctionServiceRole0802E388"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/AuthFunction/Resource"
+      }
+    },
+    "OidcMockApiTokenFunctionServiceRoleAA6238D4": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/TokenFunction/ServiceRole/Resource"
+      }
+    },
+    "OidcMockApiTokenFunctionServiceRoleDefaultPolicy7214CDB8": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "OidcMockApiTableCB8CB232",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "OidcMockApiTableCB8CB232",
+                          "Arn"
+                        ]
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "OidcMockApiTokenFunctionServiceRoleDefaultPolicy7214CDB8",
+        "Roles": [
+          {
+            "Ref": "OidcMockApiTokenFunctionServiceRoleAA6238D4"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/TokenFunction/ServiceRole/DefaultPolicy/Resource"
+      }
+    },
+    "OidcMockApiTokenFunctionE4C417E1": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "5117b02fb3e956b434dbc95bbf07c5cb4c6cb8730dea5d9ef456e0fb7b7f7ca3.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "OidcMockApiTokenFunctionServiceRoleAA6238D4",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "NODE_OPTIONS": "--enable-source-maps",
+            "OIDC_MOCK_TABLE": {
+              "Ref": "OidcMockApiTableCB8CB232"
+            }
+          }
+        },
+        "Handler": "index.tokenHandler",
+        "Runtime": "nodejs14.x"
+      },
+      "DependsOn": [
+        "OidcMockApiTokenFunctionServiceRoleDefaultPolicy7214CDB8",
+        "OidcMockApiTokenFunctionServiceRoleAA6238D4"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/TokenFunction/Resource"
+      }
+    },
+    "OidcMockApiWellKnownJwksE50E2ECD": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApiwellknownjwksjsonC23E861B"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "{\"keys\":[{\"alg\":\"RS256\",\"kid\":\"oidc-mock-RS256\",\"use\":\"enc\",\"kty\":\"RSA\",\"n\":\"tFAyApdkMQqsu_eS_7LQ93ZzJKuB9bokvrxYxHbGL_Jc_wNa4n3W7uOzd34gU5HmdpEmwtmh1mItT4ApIaDyNgZZm-ZZJNCT32CoGgciRCoVOpneoIspPau5rN5-y6mEblb31VjMq22Xh6F4IkCl4LGyOFcjQ7oQEl-xXOH0EPuF_nbYUWgzGetvNKCTZSmplLbTxmwOpL-KfJQn_3vbrcSkaC6skZty-_3dWRWgL0A7jAt7sH01XoPyoCWBo_xvsP_6clGqzPjsyw0641jTUv_l2RJIq_5qhjp-LXbJO2H0GP1ZYL0WEijvzopKX5J0I0A_5utP75y4U3A6TZUfcQ\",\"e\":\"AQAB\"}]}"
+              },
+              "StatusCode": "200"
+            }
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": "{\"statusCode\":200}"
+          },
+          "Type": "MOCK"
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/WellKnownJwks/Resource"
+      }
+    },
+    "OidcMockApiWellKnownOpenIdConfiguration89DCE412": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "ResourceId": {
+          "Ref": "OidcMockApiRestApiwellknownopenidconfiguration71244140"
+        },
+        "RestApiId": {
+          "Ref": "OidcMockApiRestApi70FF5D55"
+        },
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationResponses": [
+            {
+              "ResponseTemplates": {
+                "application/json": "#set ($baseUrl = 'https://' + $context.domainName)\n#if ($context.domainPrefix == $context.apiId)\n#set ($baseUrl = 'https://' + $context.domainName + '/' + $context.stage)\n#end\n{\"issuer\":\"oidc-mock\",\"authorization_endpoint\":\"$baseUrl/auth\",\"token_endpoint\":\"$baseUrl/token\",\"jwks_uri\":\"$baseUrl/.well-known/jwks.json\",\"userinfo_endpoint\":\"$baseUrl/userinfo\",\"scopes_supported\":[\"openid\",\"oidc-mock:auth_state\",\"offline_access\"],\"response_types_supported\":[\"code\"],\"response_modes_supported\":[\"query\"],\"grant_types_supported\":[\"authorization_code\",\"refresh_token\"],\"id_token_signing_alg_values_supported\":[\"RS256\"]}"
+              },
+              "StatusCode": "200"
+            }
+          ],
+          "PassthroughBehavior": "NEVER",
+          "RequestTemplates": {
+            "application/json": "{\"statusCode\":200}"
+          },
+          "Type": "MOCK"
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/OidcMockApi/WellKnownOpenIdConfiguration/Resource"
+      }
+    },
+    "testAuthorizationCodeSimpleHandlerServiceRole6CC9C456": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeSimpleHandler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeSimpleHandler/ServiceRole/Resource"
+      }
+    },
+    "testAuthorizationCodeSimpleHandlerC2C3B9A8": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testAuthorizationCodeSimpleHandlerServiceRole6CC9C456",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testAuthorizationCodeSimpleHandler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeSimpleHandler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testAuthorizationCodeSimpleHandlerServiceRole6CC9C456"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeSimpleHandler/Resource"
+      }
+    },
+    "testAuthorizationCodeWithStateHandlerServiceRole12DA3C27": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeWithStateHandler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeWithStateHandler/ServiceRole/Resource"
+      }
+    },
+    "testAuthorizationCodeWithStateHandlerA2C65319": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testAuthorizationCodeWithStateHandlerServiceRole12DA3C27",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testAuthorizationCodeWithStateHandler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeWithStateHandler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testAuthorizationCodeWithStateHandlerServiceRole12DA3C27"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeWithStateHandler/Resource"
+      }
+    },
+    "testAuthorizationCodeTokenWithPKCES256HandlerServiceRoleBD813D58": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeTokenWithPKCES256Handler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeTokenWithPKCES256Handler/ServiceRole/Resource"
+      }
+    },
+    "testAuthorizationCodeTokenWithPKCES256Handler64BA3C96": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testAuthorizationCodeTokenWithPKCES256HandlerServiceRoleBD813D58",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testAuthorizationCodeTokenWithPKCES256Handler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testAuthorizationCodeTokenWithPKCES256Handler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testAuthorizationCodeTokenWithPKCES256HandlerServiceRoleBD813D58"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testAuthorizationCodeTokenWithPKCES256Handler/Resource"
+      }
+    },
+    "testRefreshTokenHandlerServiceRole9DD3C009": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testRefreshTokenHandler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testRefreshTokenHandler/ServiceRole/Resource"
+      }
+    },
+    "testRefreshTokenHandlerA8AE012C": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testRefreshTokenHandlerServiceRole9DD3C009",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testRefreshTokenHandler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testRefreshTokenHandler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testRefreshTokenHandlerServiceRole9DD3C009"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testRefreshTokenHandler/Resource"
+      }
+    },
+    "testIdTokenHandlerServiceRole75968908": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testIdTokenHandler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testIdTokenHandler/ServiceRole/Resource"
+      }
+    },
+    "testIdTokenHandler15008A47": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testIdTokenHandlerServiceRole75968908",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testIdTokenHandler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testIdTokenHandler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testIdTokenHandlerServiceRole75968908"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testIdTokenHandler/Resource"
+      }
+    },
+    "testClientCredentialsHandlerServiceRoleA72A417E": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testClientCredentialsHandler"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testClientCredentialsHandler/ServiceRole/Resource"
+      }
+    },
+    "testClientCredentialsHandlerF24BE1D0": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "8603cda8f94b99d0bddf7412cdfcb9f961c80583c1989cd4c9fbbb573bd4dea1.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "testClientCredentialsHandlerServiceRoleA72A417E",
+            "Arn"
+          ]
+        },
+        "Environment": {
+          "Variables": {
+            "API_URL": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "OidcMockApiRestApi70FF5D55"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+                  },
+                  "/"
+                ]
+              ]
+            },
+            "NODE_OPTIONS": "--enable-source-maps",
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1"
+          }
+        },
+        "Handler": "index.testClientCredentialsHandler",
+        "Runtime": "nodejs14.x",
+        "Tags": [
+          {
+            "Key": "integ",
+            "Value": "testClientCredentialsHandler"
+          }
+        ],
+        "Timeout": 15
+      },
+      "DependsOn": [
+        "testClientCredentialsHandlerServiceRoleA72A417E"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "integ-oidc-mock/testClientCredentialsHandler/Resource"
+      }
+    }
+  },
+  "Outputs": {
+    "OidcMockApiRestApiEndpointE4EAB7DD": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "OidcMockApiRestApi70FF5D55"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+            },
+            "/"
+          ]
+        ]
+      }
+    },
+    "OidcMockApiUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "OidcMockApiRestApi70FF5D55"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/",
+            {
+              "Ref": "OidcMockApiRestApiDeploymentStageprod282E2A8D"
+            },
+            "/.well-known/openid-configuration"
+          ]
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
