@@ -15,23 +15,25 @@ export class AuthService {
     const pkce = getPkce(authRequest);
 
     const model = await this.authStateData.store({
-      code: uuid.v4(),
-      responseType: authRequest.response_type,
+      id: uuid.v4(),
       clientId: authRequest.client_id,
-      redirectUri: authRequest.redirect_uri,
-      pkce: pkce,
-      state: authRequest.state,
       scope: authRequest.scope,
+      authFlow: {
+        responseType: authRequest.response_type,
+        redirectUri: authRequest.redirect_uri,
+        pkce: pkce,
+        state: authRequest.state,
+      },
     });
 
     const redirectUri = authRequest.redirect_uri ?? 'https://www.example.com';
     const location = HttpUtil.makeUrl(redirectUri, {
-      code: model.code,
+      code: model.id,
       state: authRequest.state,
     });
 
     return {
-      code: model.code,
+      code: model.id,
       location,
     };
   }

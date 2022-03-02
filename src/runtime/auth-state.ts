@@ -10,14 +10,18 @@ export interface TokenCollection {
   readonly refreshToken?: string;
 }
 
-export interface AuthState extends TokenCollection {
-  readonly code: string;
+export interface AuthFlow {
   readonly responseType: ResponseType;
-  readonly clientId: string;
   readonly redirectUri?: string;
   readonly state?: string;
-  readonly scope?: string;
   readonly pkce?: Pkce;
+}
+
+export interface AuthState extends TokenCollection {
+  readonly id: string;
+  readonly clientId: string;
+  readonly authFlow?: AuthFlow;
+  readonly scope?: string;
 }
 
 export interface AuthStateDatabaseOptions {
@@ -40,7 +44,7 @@ export class AuthStateData {
   }
 
   async store(model: AuthState): Promise<AuthState> {
-    const pk = renderAuthStateKeyId(model.code);
+    const pk = renderAuthStateKeyId(model.id);
 
     const item = {
       PK: pk,

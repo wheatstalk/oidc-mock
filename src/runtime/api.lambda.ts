@@ -4,7 +4,7 @@ import { PkceChallengeMethod, ResponseType } from '../oidc-types';
 import { authRequestValidator } from './api.schema';
 import { AuthStateData } from './auth-state';
 import { Logger } from './logger';
-import { AuthService, TokenService } from './services';
+import { AuthService, TokenService, ServiceError } from './services';
 import { ValidationError } from './validator';
 
 export const authHandler = handler(auth);
@@ -82,7 +82,7 @@ export function handler(apiHandler: APIHandler): APIHandler {
       if (e instanceof ValidationError) {
         return renderError(400, `Validation Error: ${e.message}`);
       }
-      if (e instanceof ValidationError) {
+      if (e instanceof ServiceError) {
         return renderError(400, `Service Error: ${e.message}`);
       }
       throw e;

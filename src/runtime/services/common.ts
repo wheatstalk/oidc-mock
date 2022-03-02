@@ -2,9 +2,12 @@ import * as uuid from 'uuid';
 import { Jwks } from '../../jwks';
 import { TokenScope } from '../../oidc-types';
 import { AuthState, TokenCollection } from '../auth-state';
+import { Logger } from '../logger';
 
 export async function generateTokenCollection(authState: AuthState): Promise<TokenCollection> {
   const scopeMap = scopeToMap(authState.scope);
+  Logger.debug('Generating token collection', { authState, scopeMap });
+
   const accessToken = generateToken('access-token');
 
   const idToken = !scopeMap[TokenScope.OPENID] ? undefined : await Jwks.signJwt({

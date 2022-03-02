@@ -12,6 +12,7 @@ export const testAuthorizationCodeWithStateHandler = testHandler(testAuthorizati
 export const testAuthorizationCodeTokenWithPKCES256Handler = testHandler(testAuthorizationCodeTokenWithPKCES256);
 export const testRefreshTokenHandler = testHandler(testRefreshToken);
 export const testIdTokenHandler = testHandler(testIdToken);
+export const testClientCredentialsHandler = testHandler(testClientCredentials);
 
 
 const API_URL = process.env.API_URL as string;
@@ -192,6 +193,33 @@ export async function testIdToken() {
   return tokenRes;
 }
 
+async function testClientCredentials() {
+  // GIVEN
+  const clientId = uuid.v4();
+  const clientSecret = 'some-secret';
+  const state = 'foo-bar';
+  const scope = [TokenScope.OPENID, TokenScope.OIDC_MOCK_AUTH_STATE].join(' ');
+
+  // WHEN
+  const tokenRes: any = await got.post(TOKEN_URL, {
+    form: {
+      grant_type: GrantType.CLIENT_CREDENTIALS,
+      client_id: clientId,
+      client_secret: clientSecret,
+      state: state,
+      scope: scope,
+    },
+  }).json();
+
+  // THEN
+  expect(tokenRes).toHaveProperty('id_token', expect.stringMatching(/\..*\./));
+  expect(tokenRes).toHaveProperty('auth_state', expect.objectContaining({
+    clientId: expect.any(String),
+  }));
+
+  return tokenRes;
+}
+
 function testHandler(cb: () => Promise<void>) {
   return inner;
 
@@ -206,3 +234,4 @@ function testHandler(cb: () => Promise<void>) {
     }
   }
 }
+

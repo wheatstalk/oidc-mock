@@ -32,5 +32,6 @@ new IntegTest(stack, 'testAuthorizationCodeWithStateHandler');
 new IntegTest(stack, 'testAuthorizationCodeTokenWithPKCES256Handler');
 new IntegTest(stack, 'testRefreshTokenHandler');
 new IntegTest(stack, 'testIdTokenHandler');
+new IntegTest(stack, 'testClientCredentialsHandler');
 
 app.synth();

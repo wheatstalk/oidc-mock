@@ -16,7 +16,7 @@ export class HttpUtil {
         .split('&')
         .map(item => {
           const [key, value] = item.split('=');
-          return [decodeURIComponent(key), decodeURIComponent(value)];
+          return [decodeURIComponent(key), decodeURIComponent(value.replace(/\+/g, ' '))];
         }),
     );
   }

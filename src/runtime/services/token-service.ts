@@ -1,12 +1,14 @@
 import { GrantType, TokenScope } from '../../oidc-types';
 import { AuthState, AuthStateData } from '../auth-state';
 import { scopeToMap, ServiceError } from './common';
-import { AuthorizationCode, RefreshToken } from './token-handler';
+import { AuthorizationCode, RefreshToken, ClientCredentials } from './token-handler';
+import { Logger } from '../logger';
 
 export interface TokenRequestBase<T extends GrantType> {
   readonly grant_type: T;
   readonly client_id: string;
   readonly client_secret: string;
+  readonly scope?: string;
 }
 
 export interface AuthorizationCodeTokenRequest extends TokenRequestBase<GrantType.AUTHORIZATION_CODE> {
@@ -54,13 +56,16 @@ export class TokenService {
     this.tokenHandlers = [
       new AuthorizationCode(authStateData),
       new RefreshToken(authStateData),
+      new ClientCredentials(authStateData),
     ];
   }
 
   async token(tokenRequest: TokenRequest): Promise<TokenResponse> {
     for (const handler of this.tokenHandlers) {
       if (handler.supports(tokenRequest)) {
-        return createServiceTokenResult(await handler.handle(tokenRequest));
+        const authState = await handler.handle(tokenRequest);
+        Logger.debug('Token handler produced auth state', { tokenRequest, authState });
+        return createServiceTokenResult(authState);
       }
     }
 

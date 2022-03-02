@@ -28,16 +28,21 @@ export class AuthorizationCode implements ITokenHandler<AuthorizationCodeTokenRe
       throw new ServiceError('Mismatched client id');
     }
 
-    if (authState.redirectUri !== tokenRequest.redirect_uri) {
+    const authFlow = authState.authFlow;
+    if (!authFlow) {
+      throw new ServiceError('Token is not part of an auth flow');
+    }
+
+    if (authFlow.redirectUri !== tokenRequest.redirect_uri) {
       throw new ServiceError('Mismatched redirect uri');
     }
 
-    if (authState.pkce) {
+    if (authFlow.pkce) {
       if (!tokenRequest.code_verifier) {
         throw new ServiceError('Missing code verifier');
       }
 
-      if (!PkceUtil.checkPkceCodeVerifier(authState.pkce, tokenRequest.code_verifier)) {
+      if (!PkceUtil.checkPkceCodeVerifier(authFlow.pkce, tokenRequest.code_verifier)) {
         throw new ServiceError('Invalid code verifier');
       }
     }
