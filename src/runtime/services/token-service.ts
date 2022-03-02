@@ -1,8 +1,9 @@
 import { GrantType, TokenScope } from '../../oidc-types';
 import { AuthState, AuthStateData } from '../auth-state';
+import { Logger } from '../logger';
 import { scopeToMap, ServiceError } from './common';
 import { AuthorizationCode, RefreshToken, ClientCredentials } from './token-handler';
-import { Logger } from '../logger';
+import { Password } from './token-handler/password';
 
 export interface TokenRequestBase<T extends GrantType> {
   readonly grant_type: T;
@@ -57,6 +58,7 @@ export class TokenService {
       new AuthorizationCode(authStateData),
       new RefreshToken(authStateData),
       new ClientCredentials(authStateData),
+      new Password(authStateData),
     ];
   }
 

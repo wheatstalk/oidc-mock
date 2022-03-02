@@ -4,19 +4,24 @@ import { TokenScope } from '../../oidc-types';
 import { AuthState, TokenCollection } from '../auth-state';
 import { Logger } from '../logger';
 
-export async function generateTokenCollection(authState: AuthState): Promise<TokenCollection> {
-  const scopeMap = scopeToMap(authState.scope);
-  Logger.debug('Generating token collection', { authState, scopeMap });
+export interface GenerateTokenCollectionOptions {
+  readonly authState: AuthState;
+  readonly subject?: string;
+}
+
+export async function generateTokenCollection(options: GenerateTokenCollectionOptions): Promise<TokenCollection> {
+  const scopeMap = scopeToMap(options.authState.scope);
+  Logger.debug('Generating token collection', { authState: options.authState, scopeMap });
 
   const accessToken = generateToken('access-token');
 
   const idToken = !scopeMap[TokenScope.OPENID] ? undefined : await Jwks.signJwt({
     issuer: 'oidc-mock',
     audience: 'some-api',
-    subject: authState.clientId,
+    subject: options.subject ?? options.authState.clientId,
     payload: {
-      client_id: authState.clientId,
-      scope: authState.scope,
+      client_id: options.authState.clientId,
+      scope: options.authState.scope,
     },
   });
 

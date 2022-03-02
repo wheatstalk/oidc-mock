@@ -25,7 +25,7 @@ export class RefreshToken implements ITokenHandler<RefreshTokenRequest> {
 
     Logger.debug('Fetched token', { token: authState });
 
-    const tokenCollection = await generateTokenCollection(authState);
+    const tokenCollection = await generateTokenCollection({ authState });
 
     return this.db.store({
       ...authState,

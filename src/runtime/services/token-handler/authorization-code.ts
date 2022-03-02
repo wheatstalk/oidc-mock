@@ -47,9 +47,11 @@ export class AuthorizationCode implements ITokenHandler<AuthorizationCodeTokenRe
       }
     }
 
+    const tokenCollection = await generateTokenCollection({ authState });
+
     return this.db.store({
       ...authState,
-      ...(await generateTokenCollection(authState)),
+      ...tokenCollection,
     });
   }
 }
