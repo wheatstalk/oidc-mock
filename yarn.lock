@@ -1085,10 +1085,10 @@
     "@typescript-eslint/types" "5.14.0"
     eslint-visitor-keys "^3.0.0"
 
-"@wheatstalk/aws-cdk-exec@^0.1.24":
-  version "0.1.24"
-  resolved "https://registry.yarnpkg.com/@wheatstalk/aws-cdk-exec/-/aws-cdk-exec-0.1.24.tgz#1645b89386c6d61b09d31809596a066f20c526fe"
-  integrity sha512-eac2CWfC1m1b2n7BYpqf0dMjlumgYdjWV0NJEBF9q+hIRinK3DsfeTVTNKsC3dUKCmKyaJvHkabYFrmaskohUQ==
+"@wheatstalk/aws-cdk-exec@^0.1.25":
+  version "0.1.25"
+  resolved "https://registry.yarnpkg.com/@wheatstalk/aws-cdk-exec/-/aws-cdk-exec-0.1.25.tgz#212dc792d4770c2026be20c0829417a911a99e0d"
+  integrity sha512-fxkdP5luyT3xVVlnZOf13n1i1/2mOKVf2AWI7xHH+3GVBYQvJiptLQ72R7ULE1Fz/b5Qsb0X12x+y8YfVV62Cw==
   dependencies:
     aws-sdk "^2.0.0"
     chalk "^4.0.0"
@@ -1405,10 +1405,10 @@ aws-cdk@^2:
   optionalDependencies:
     fsevents "2.3.2"
 
-aws-sdk@^2.0.0, aws-sdk@^2.1089.0:
-  version "2.1089.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1089.0.tgz#198ee116f3d6f70cd26cd6f7efa6adba46a54768"
-  integrity sha512-QhawXCxhOLR+SJHuKXNzyx1hd+oA1HqaDRjbeTKUrz7g2KF4EyPWvLwzf1fNaOTPK3Vp3JDYijusdKlfV69efw==
+aws-sdk@^2.0.0, aws-sdk@^2.1090.0:
+  version "2.1090.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1090.0.tgz#c30e4cbc177e4c3b7792020cc79dfaf155cc8197"
+  integrity sha512-oHdfbiuSjK9mn6rrm5fsitdwv7jEiYzaYB0Xz1kqjIczcVX3JEc+9ySdxlueQf4o5G3RVUcLRF2pIc5j9vcHSg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -2543,9 +2543,9 @@ ejs@^3.1.6:
     jake "^10.6.1"
 
 electron-to-chromium@^1.4.76:
-  version "1.4.77"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.77.tgz#c26e454cb8721d4ebdae3e276c57cd32e51c32ed"
-  integrity sha512-fiDxw8mO9Ph1Z0bjX2sFTPpi0J0QkOiwOJF+5Q0J0baNc/F9lLePAvDPlnoxvbUYYMizqrKPeotRRkJ9LtxAew==
+  version "1.4.79"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.79.tgz#02b504e1e6039b2e61edfc5f856895a0927925f5"
+  integrity sha512-nWfAxof87mGHkbORCwVRPst4FlSVdprOKS6dBMrcwn3sjwf8iHXEhsu1+FU5Psd7Ps3KKeBufAdfsPK5BmbSUg==
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -4856,10 +4856,10 @@ jsii-diff@^1.54.0:
     typescript "~3.9.10"
     yargs "^16.2.0"
 
-jsii-docgen@^6.1.27:
-  version "6.1.27"
-  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-6.1.27.tgz#a403e698c3724fc41961a68ac314c2fcdb36ac67"
-  integrity sha512-4HBnTGLCKp6Q8eLHarjH/KCBBwEd/8WnaRrSTmf1E4ypi4XwLAAXBzPFNuSerztM48LOs1a1zBqzaQL4l2jUSw==
+jsii-docgen@^6.1.28:
+  version "6.1.28"
+  resolved "https://registry.yarnpkg.com/jsii-docgen/-/jsii-docgen-6.1.28.tgz#3b794eac3ec836ea0aefea723861ad7842bb0894"
+  integrity sha512-Vuode0IafW6jG+r7KOWCGVGpAm46DsWMnDas/VJtCxvKJyRbRkNxaCLG2geYHfgKFqxfFeE1jzqJ5yb6GDjkPg==
   dependencies:
     "@jsii/spec" "^1.54.0"
     case "^1.6.3"
@@ -5250,9 +5250,9 @@ lru-cache@^6.0.0:
     yallist "^4.0.0"
 
 lru-cache@^7.3.1, lru-cache@^7.4.1:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.4.1.tgz#afe07e885ef0cd5bf99f62f4fa7545d48746d779"
-  integrity sha512-NCD7/WRlFmADccuHjsRUYqdluYBr//n/O0fesCb/n52FoGcgKh8o4Dpm7YIbZwVcDs8rPBQbCZLmWWsp6m+xGQ==
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.4.2.tgz#92f7b5afe82759f51b216a96fae3bc1828df9712"
+  integrity sha512-Xs3+hFPDSKQmL05Gs6NhvAADol1u9TmLoNoE03ZjszX6a5iYIO3rPUM4jIjoBUJeTaWEBMozjjmV70gvdRfIdw==
 
 make-dir@^3.0.0:
   version "3.1.0"
@@ -6284,10 +6284,10 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.52.61:
-  version "0.52.61"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.52.61.tgz#9a712a69e225e53b335f49d09672666ec37d8782"
-  integrity sha512-K9Kfa3kWOVkFQkSlzQQvddojRARMVNXdvVeKmi4o5G+g41aHMdOO3zGwa7mwI9Svk2bL6k79tXBXHzFJyzW49A==
+projen@^0.52.62:
+  version "0.52.62"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.52.62.tgz#7cd0a025556a761d0bae38c6fb65472af2115576"
+  integrity sha512-rAsOSLdOMpVHSdi7jTFSpD6BY5+NLuDXkcIw3F9YYV0h7AZoo2biUDcDPgpwFkEZi3EAa6yITgkOac45065bCQ==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
